@@ -3,24 +3,21 @@
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import { usePlantContext } from "./PlantContext";
 
-interface PlantFormProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-const PlantForm: React.FC<PlantFormProps> = ({ visible, onClose }) => {
+const PlantForm: React.FC = () => {
   const [plantName, setPlantName] = useState("");
   const [frequency, setFrequency] = useState("1");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
 
   useEffect(() => {
-    if (!visible) return;
+    if (!formVisible) return;
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        setFormVisible(false);
       }
     };
 
@@ -28,15 +25,10 @@ const PlantForm: React.FC<PlantFormProps> = ({ visible, onClose }) => {
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [visible, onClose]);
+  }, [formVisible, setFormVisible]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!plantName.trim()) {
-      setError("Plant name is required.");
-      return;
-    }
 
     setLoading(true);
     setError(null);
@@ -52,9 +44,10 @@ const PlantForm: React.FC<PlantFormProps> = ({ visible, onClose }) => {
       return;
     }
 
+    await fetchPlants();
     setPlantName("");
     setFrequency("1");
-    onClose();
+    setFormVisible(false);
   };
 
   return (
@@ -70,7 +63,7 @@ const PlantForm: React.FC<PlantFormProps> = ({ visible, onClose }) => {
       <button
         type="button"
         className="absolute flex justify-center items-center w-10 h-10 bg-black rounded-md top-0 right-0 translate-x-1 -translate-y-1 text-white font-bold select-none text-4xl"
-        onClick={onClose}
+        onClick={() => setFormVisible(false)}
       >
         <span className="-translate-y-1 w-full h-full hover:rotate-10 transition-all origin-center">
           ×
