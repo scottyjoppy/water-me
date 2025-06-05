@@ -13,7 +13,6 @@ const PlantForm: React.FC = () => {
   const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
   const [type, setType] = useState("daily");
   const [interval, setInterval] = useState(1);
-  const [unit, setUnit] = useState("week");
   const [weekdays, setWeekdays] = useState<number[]>([]);
 
   const formRef = useRef<HTMLFormElement>(null);
