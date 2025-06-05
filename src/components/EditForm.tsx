@@ -1,6 +1,8 @@
 "use client";
 
 import { Plant } from "@/app/page";
+import { movePlant } from "@/app/utils/movePlants";
+import { normalizePositions } from "@/app/utils/normalizeOrder";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
@@ -17,9 +19,25 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { fetchPlants } = usePlantContext();
+  const { plants, fetchPlants } = usePlantContext();
 
   const formRef = useRef<HTMLFormElement>(null);
+
+  const index = plants.findIndex((p) => p.id === plantToEdit?.id);
+
+  const handleMoveUp = async () => {
+    if (index > 0) {
+      await movePlant(plants, index, "up");
+      await fetchPlants(); // refresh after move
+    }
+  };
+
+  const handleMoveDown = async () => {
+    if (index >= 0 && index < plants.length - 1) {
+      await movePlant(plants, index, "down");
+      await fetchPlants(); // refresh after move
+    }
+  };
 
   useEffect(() => {
     if (plantToEdit) {
@@ -40,10 +58,10 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
       }
     };
 
-    document.addEventListener("mousedown", handleEscape);
+    document.addEventListener("click", handleEscape);
     document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener("mousedown", handleEscape);
+      document.removeEventListener("click", handleEscape);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [onClose]);
@@ -66,6 +84,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
       return;
     }
 
+    await normalizePositions();
     await fetchPlants();
     onClose();
   };
@@ -94,6 +113,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     }
 
     await fetchPlants();
+    await normalizePositions();
     onClose();
   };
 
@@ -112,7 +132,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     >
       <button
         type="button"
-        className="absolute flex justify-center items-center w-10 h-10 bg-black rounded-md top-0 right-0 translate-x-1 -translate-y-1 text-white font-bold select-none text-4xl"
+        className="absolute flex justify-center items-center w-10 h-10 bg-black rounded-bl-md top-0 right-0 translate-x-1 -translate-y-1 text-white font-bold select-none text-4xl"
         onClick={onClose}
       >
         <span className="-translate-y-1 w-full h-full hover:rotate-10 transition-all origin-center">
@@ -154,6 +174,33 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
             ))}
           </select>
         </div>
+      </div>
+      <div className="w-full flex gap-3">
+        <button
+          type="button"
+          onClick={handleMoveUp}
+          disabled={index <= 0}
+          className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
+            index <= 0
+              ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
+              : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
+          }`}
+        >
+          Move Up
+        </button>
+
+        <button
+          type="button"
+          onClick={handleMoveDown}
+          disabled={index === -1 || index >= plants.length - 1}
+          className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
+            index === -1 || index >= plants.length - 1
+              ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
+              : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
+          }`}
+        >
+          Move Down
+        </button>
       </div>
       <div className="w-full flex gap-3">
         <button

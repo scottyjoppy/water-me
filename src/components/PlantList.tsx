@@ -2,7 +2,6 @@
 
 import { Plant } from "@/app/page";
 import { markAsWatered } from "@/app/utils/markAsWatered";
-import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import EditForm from "./EditForm";
 import LastWatered from "./LastWatered";
@@ -13,11 +12,9 @@ const PlantList = () => {
   const [page, setPage] = useState(0);
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [plantToEdit, setPlantToEdit] = useState<Plant | null>(null);
-  const [editFormVisible, setEditFormVisible] = useState(false);
 
-  const openEditForm = (plant: Plant) => {
-    setPlantToEdit(plant);
-    setEditFormVisible(true);
+  const toggleEditForm = (plant: Plant) => {
+    setPlantToEdit((prev) => (prev?.id === plant.id ? null : plant));
   };
 
   const itemsPerPage = 9;
@@ -64,10 +61,14 @@ const PlantList = () => {
                   className="flex z-0 relative sm:flex-col sm:justify-between justify-center border-4 p-3 rounded-xl bg-green-300 col-span-1 sm:h-[200px] sm:w-[200px]"
                 >
                   <button
-                    onClick={() => openEditForm(plant)}
+                    onClick={() => {
+                      toggleEditForm(plant);
+                    }}
                     className="absolute rounded-bl-2xl top-0 right-0 text-white bg-black h-8 w-8 hover:cursor-pointer"
                   >
-                    <div className="translate-x-[2px] -translate-y-[2px]">✎</div>
+                    <div className="translate-x-[2px] -translate-y-[2px]">
+                      ✎
+                    </div>
                   </button>
                   <h2 className="uppercase font-bold text-3xl underline leading-4">
                     {plant.plant_name}
@@ -121,16 +122,11 @@ const PlantList = () => {
         )}
       </section>
       <div>
-        {editFormVisible && (
-          <AnimatePresence>
-            <EditForm
-              plantToEdit={plantToEdit}
-              onClose={() => {
-                setEditFormVisible(false);
-                setPlantToEdit(null);
-              }}
-            />
-          </AnimatePresence>
+        {plantToEdit && (
+          <EditForm
+            plantToEdit={plantToEdit}
+            onClose={() => setPlantToEdit(null)}
+          />
         )}
       </div>
     </>

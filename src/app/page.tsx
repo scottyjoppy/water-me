@@ -1,21 +1,19 @@
 "use client";
 
 import { usePlantContext } from "@/components/PlantContext";
-import { AnimatePresence } from "framer-motion";
-import PlantForm from "../components/PlantForm";
 
 export type Plant = {
   id: number;
   plant_name: string;
   frequency: number;
   last_watered: string | null;
+  sort_order: number;
 };
 
 const Home = () => {
-  const { formVisible, setFormVisible } = usePlantContext();
+  const { setFormVisible } = usePlantContext();
   return (
     <>
-      <AnimatePresence>{formVisible && <PlantForm />}</AnimatePresence>
       <section className="flex flex-col gap-10 justify-center items-center h-screen border-10 bg-amber-300">
         <h1 className="text-7xl text-max font-bold text-center whitespace-nowrap underline">
           Water Me!
