@@ -33,8 +33,8 @@ const LastWatered: React.FC<LastWateredProps> = ({ lastWatered }) => {
   }
 
   return (
-    <p>
-      Last watered: {formatDate(lastWatered)} {message}
+    <p className="border-4 px-3 py-1 bg-white rounded-xl">
+      <span className="font-bold underline">Last watered: </span>{formatDate(lastWatered)} {message}
     </p>
   );
 };

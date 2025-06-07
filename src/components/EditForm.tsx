@@ -5,10 +5,11 @@ import { normalizePositions } from "@/utils/normalizeOrder";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { Plant } from "../types/databaseValues";
+import { Day, Plant } from "../types/databaseValues";
 import { usePlantContext } from "./PlantContext";
 import PlantFrequencySelector from "./PlantFrequencySelector";
 import PlantNameInput from "./PlantNameInput";
+import PlantWateredSelector from "./PlantWateredSelector";
 
 type EditFormProps = {
   plantToEdit: Plant | null;
@@ -17,6 +18,7 @@ type EditFormProps = {
 
 const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [plantName, setPlantName] = useState("");
+  const [lastWatered, setLastWatered] = useState("");
   const [type, setType] = useState("daily");
   const [interval, setInterval] = useState(1);
   const [selectedDays, setSelectedDays] = useState<Day[]>([]);
@@ -27,18 +29,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const { plants, fetchPlants } = usePlantContext();
 
   const formRef = useRef<HTMLFormElement>(null);
-
-  const days = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-  ] as const;
-
-  type Day = (typeof days)[number];
 
   const index = plants.findIndex((p) => p.id === plantToEdit?.id);
 
@@ -60,15 +50,15 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     if (plantToEdit) {
       setPlantName(plantToEdit.plant_name);
 
+      const initialLastWatered =
+        plantToEdit.last_watered || new Date().toISOString();
+      setLastWatered(initialLastWatered);
+
       const freq = plantToEdit.frequency;
       setType(freq.type);
 
       if (freq.type === "multiple-weekly") {
-        setSelectedDays(
-          (freq.days || []).filter((day): day is Day =>
-            days.includes(day as Day)
-          )
-        );
+        setSelectedDays(freq.days || []);
       } else if (freq.type === "every-week" || freq.type === "every-month") {
         setInterval(freq.interval);
       }
@@ -110,7 +100,11 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
 
     const { error } = await supabase
       .from("plants")
-      .update({ plant_name: plantName, frequency: frequencyData })
+      .update({
+        plant_name: plantName,
+        frequency: frequencyData,
+        last_watered: lastWatered,
+      })
       .eq("id", plantToEdit?.id);
 
     setIsSubmitting(false);
@@ -187,7 +181,10 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
         selectedDays={selectedDays}
         setSelectedDays={setSelectedDays}
       />
-
+      <PlantWateredSelector
+        lastWatered={lastWatered}
+        setLastWatered={setLastWatered}
+      />
       <div className="w-full flex gap-3">
         <button
           type="button"

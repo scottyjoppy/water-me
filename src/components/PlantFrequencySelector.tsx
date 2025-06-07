@@ -1,16 +1,5 @@
+import { Day, days } from "@/types/databaseValues";
 import React from "react";
-
-export const days = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-] as const;
-
-export type Day = (typeof days)[number];
 
 type FrequencySelectorProps = {
   type: string;

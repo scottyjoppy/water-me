@@ -59,7 +59,7 @@ const PlantList = () => {
               return (
                 <li
                   key={plant.id}
-                  className="flex z-0 relative sm:flex-col sm:justify-between justify-center border-4 p-3 rounded-xl bg-green-300 col-span-1 sm:h-[200px] sm:w-[200px]"
+                  className="flex z-0 relative sm:flex-col sm:justify-between justify-center border-4 p-3 rounded-xl bg-green-300 col-span-1 sm:h-[300px] sm:w-[200px]"
                 >
                   <button
                     onClick={() => {

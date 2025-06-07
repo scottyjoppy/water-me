@@ -1,6 +1,6 @@
 export type Frequency =
   | { type: "daily" }
-  | { type: "multiple-weekly"; days: string[] }
+  | { type: "multiple-weekly"; days: Day[] }
   | { type: "every-week"; interval: number }
   | { type: "every-month"; interval: number };
 
@@ -11,3 +11,22 @@ export type Plant = {
   last_watered: string;
   sort_order: number;
 };
+
+export type Day =
+  | "Sunday"
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday";
+
+  export const days: Day[] = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];

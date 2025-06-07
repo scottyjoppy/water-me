@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Frequency } from "@/types/databaseValues";
-import { days } from "./PlantFrequencySelector"; // assuming you export Day too
+import { days, Frequency } from "@/types/databaseValues";
 
 interface NextWateredProps {
   lastWatered: string;
@@ -16,7 +15,9 @@ const getNextWateringDate = (
   frequency: Frequency
 ): Date => {
   const baseDate = new Date(lastWatered);
-  baseDate.setHours(0, 0, 0, 0);
+  baseDate.setHours(12, 0, 0, 0);
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
   const dayMs = 1000 * 60 * 60 * 24;
 
   switch (frequency.type) {
@@ -33,19 +34,22 @@ const getNextWateringDate = (
     }
 
     case "multiple-weekly": {
-      const baseDayIndex = baseDate.getDay(); // Sunday = 0
-      const selectedIndexes = frequency.days.map((day) =>
-        days.indexOf(day as any)
-      );
+      const selectedIndexes = frequency.days
+        .map((day) => days.indexOf(day))
+        .sort((a, b) => a - b);
 
-      // Find the next selected day *after* baseDayIndex
-      const nextDiff =
-        selectedIndexes
-          .map((i) => (i - baseDayIndex + 7) % 7)
-          .filter((d) => d > 0) // Only *after* the last watered day
-          .sort((a, b) => a - b)[0] ?? 7; // Default: same day next week
+      for (let i = 1; i <= 7; i++) {
+        const candidate = new Date(today);
+        candidate.setDate(today.getDate() + i);
+        const candidateDay = candidate.getDay();
 
-      return new Date(baseDate.getTime() + nextDiff * dayMs);
+        if (selectedIndexes.includes(candidateDay)) {
+          return candidate;
+        }
+      }
+
+      // fallback (shouldn't happen)
+      return new Date(today.getTime() + 7 * dayMs);
     }
 
     default:
@@ -57,11 +61,12 @@ const NextWatered: React.FC<NextWateredProps> = ({
   lastWatered,
   frequency,
 }) => {
-  if (!lastWatered) return <p>Next watering: Unknown (never watered)</p>;
+  if (!lastWatered) return <p>Next watering: (never watered)</p>;
 
   const nextDate = getNextWateringDate(lastWatered, frequency);
+  nextDate.setHours(12, 0, 0, 0);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(12, 0, 0, 0);
   const diff = Math.floor(
     (nextDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -72,8 +77,8 @@ const NextWatered: React.FC<NextWateredProps> = ({
   else message = `${Math.abs(diff)} day${Math.abs(diff) > 1 ? "s" : ""} ago`;
 
   return (
-    <p>
-      Next watering: {formatDate(nextDate)} {message}
+    <p className="border-4 px-3 py-1 bg-white rounded-xl">
+      <span className="font-bold underline">Next watering: </span>{formatDate(nextDate)} {message}
     </p>
   );
 };
