@@ -7,7 +7,6 @@ import { usePlantContext } from "./PlantContext";
 
 const PlantForm: React.FC = () => {
   const [plantName, setPlantName] = useState("");
-  const [frequency, setFrequency] = useState("1");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
@@ -110,7 +109,6 @@ const PlantForm: React.FC = () => {
 
     await fetchPlants();
     setPlantName("");
-    setFrequency("1");
     setFormVisible(false);
   };
 
