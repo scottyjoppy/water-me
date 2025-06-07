@@ -7,6 +7,8 @@ import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { usePlantContext } from "./PlantContext";
+import PlantFrequencySelector from "./PlantFrequencySelector";
+import PlantNameInput from "./PlantNameInput";
 
 type EditFormProps = {
   plantToEdit: Plant | null;
@@ -15,13 +17,28 @@ type EditFormProps = {
 
 const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [plantName, setPlantName] = useState("");
-  const [frequency, setFrequency] = useState("1");
+  const [type, setType] = useState("daily");
+  const [interval, setInterval] = useState(1);
+  const [selectedDays, setSelectedDays] = useState<Day[]>([]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { plants, fetchPlants } = usePlantContext();
 
   const formRef = useRef<HTMLFormElement>(null);
+
+  const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ] as const;
+
+  type Day = (typeof days)[number];
 
   const index = plants.findIndex((p) => p.id === plantToEdit?.id);
 
@@ -42,7 +59,19 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   useEffect(() => {
     if (plantToEdit) {
       setPlantName(plantToEdit.plant_name);
-      setFrequency(plantToEdit.frequency.toString());
+
+      const freq = plantToEdit.frequency;
+      setType(freq.type);
+
+      if (freq.type === "multiple-weekly") {
+        setSelectedDays(
+          (freq.days || []).filter((day): day is Day =>
+            days.includes(day as Day)
+          )
+        );
+      } else if (freq.type === "every-week" || freq.type === "every-month") {
+        setInterval(freq.interval);
+      }
     }
   }, [plantToEdit]);
 
@@ -72,9 +101,16 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     setIsSubmitting(true);
     setError(null);
 
+    const frequencyData =
+      type === "multiple-weekly"
+        ? { type, days: selectedDays }
+        : type === "daily"
+        ? { type }
+        : { type, interval };
+
     const { error } = await supabase
       .from("plants")
-      .update({ plant_name: plantName, frequency: Number(frequency) })
+      .update({ plant_name: plantName, frequency: frequencyData })
       .eq("id", plantToEdit?.id);
 
     setIsSubmitting(false);
@@ -139,42 +175,19 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
           ×
         </span>
       </button>
-      <div className="grid grid-cols-2 items-center bg-[#e0998e] px-3 py-5 rounded-2xl">
-        <label htmlFor="plant-name" className="uppercase font-bold underline">
-          Plant name
-        </label>
-        <input
-          id="plant-name"
-          type="text"
-          className="bg-white w-full border-4 rounded-xl px-3 py-1 outline-none"
-          value={plantName}
-          onChange={(e) => setPlantName(e.target.value)}
-          required
-          maxLength={15}
-          autoFocus
-        />
-      </div>
-      <div className="grid grid-cols-2 w-full items-center bg-[#e0998e] px-3 py-5 rounded-2xl">
-        <label htmlFor="frequency" className="uppercase font-bold underline">
-          Frequency
-        </label>
-        <div className="flex gap-3 items-center">
-          <h2>Days:</h2>
-          <select
-            id="frequency"
-            name="Frequency"
-            className="bg-white border-4 rounded-xl px-3 py-1 outline-none"
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
-            {[1, 2, 3, 4].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      {/* Plant Name Input Section */}
+      <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
+
+      {/* Frequency Section */}
+      <PlantFrequencySelector
+        type={type}
+        setType={setType}
+        interval={interval}
+        setInterval={setInterval}
+        selectedDays={selectedDays}
+        setSelectedDays={setSelectedDays}
+      />
+
       <div className="w-full flex gap-3">
         <button
           type="button"
@@ -208,7 +221,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
           className="uppercase w-1/2 font-bold text-2xl bg-red-400 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
           disabled={isSubmitting || isDeleting}
         >
-          {isSubmitting ? "Submitting..." : "Submit"}
+          {isSubmitting ? "Saving..." : "Save"}
         </button>
         <button
           type="button"

@@ -73,7 +73,6 @@ const PlantList = () => {
                   <h2 className="uppercase font-bold text-3xl underline leading-4">
                     {plant.plant_name}
                   </h2>
-                  <p>Water every {plant.frequency} day(s)</p>
                   <LastWatered lastWatered={plant.last_watered} />
                   <div className="flex justify-between mx-auto">
                     <button

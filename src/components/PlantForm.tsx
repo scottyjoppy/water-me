@@ -13,7 +13,27 @@ const PlantForm: React.FC = () => {
   const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
   const [type, setType] = useState("daily");
   const [interval, setInterval] = useState(1);
-  const [weekdays, setWeekdays] = useState<number[]>([]);
+  const [selectedDays, setSelectedDays] = useState<Day[]>([]);
+
+  const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  type Day = (typeof days)[number];
+
+  const toggleDay = (day: Day) => {
+    setSelectedDays((prevSelected) =>
+      prevSelected.includes(day)
+        ? prevSelected.filter((d) => d !== day)
+        : [...prevSelected, day]
+    );
+  };
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -66,10 +86,17 @@ const PlantForm: React.FC = () => {
         : 1;
 
     // 3. Insert plant with sort_order
+    const frequencyData =
+      type === "multiple-weekly"
+        ? { type, days: selectedDays }
+        : type === "daily"
+        ? { type }
+        : { type, interval };
+
     const { error } = await supabase.from("plants").insert([
       {
         plant_name: plantName,
-        frequency: Number(frequency),
+        frequency: frequencyData, // <- JSON inserted into frequency column
         sort_order: nextSortOrder,
       },
     ]);
@@ -130,7 +157,7 @@ const PlantForm: React.FC = () => {
       <div className="w-full flex items-center justify-between bg-[#e0998e] px-3 py-5 rounded-2xl">
         <label className="font-bold uppercase underline">Frequency</label>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -143,22 +170,27 @@ const PlantForm: React.FC = () => {
           </select>
           {/* Conditional Inputs */}
           {type === "multiple-weekly" && (
-            <select
-              id="weeklyAmount"
-              name="weeklyAmount"
-              value={weekdays.length}
-              onChange={(e) => {
-                const val = parseInt(e.target.value);
-                setWeekdays(Array.from({ length: val }, (_, i) => i));
-              }}
-              className="h-10 w-16 px-3 py-1 rounded-xl border-4 bg-white"
-            >
-              {[2, 3, 4, 5, 6, 7].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
+            <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
+              {days.map((day) => (
+                <label
+                  key={day}
+                  htmlFor={day}
+                  className={`select-none uppercase hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 font-bold hover:cursor-pointer border-4 rounded-xl flex justify-center items-center px-3 py-1 transition-all ${
+                    selectedDays.includes(day) ? "bg-amber-300" : "bg-white"
+                  }`}
+                >
+                  <input
+                    id={day}
+                    type="checkbox"
+                    value={day}
+                    checked={selectedDays.includes(day)}
+                    onChange={() => toggleDay(day)}
+                    className="hidden"
+                  />
+                  {day.slice(0, 3)}
+                </label>
               ))}
-            </select>
+            </div>
           )}
           {(type === "every-week" || type === "every-month") && (
             <div className="flex gap-2 items-center">
