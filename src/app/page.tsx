@@ -1,11 +1,10 @@
-"use client";
+"use client"
 
 import { usePlantContext } from "@/components/PlantContext";
 
-
-
 const Home = () => {
   const { setFormVisible } = usePlantContext();
+
   return (
     <>
       <section className="flex flex-col gap-10 justify-center items-center h-screen border-10 bg-amber-300">

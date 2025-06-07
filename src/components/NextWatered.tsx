@@ -5,6 +5,8 @@ import { days, Frequency } from "@/types/databaseValues";
 interface NextWateredProps {
   lastWatered: string;
   frequency: Frequency;
+  className?: string;
+  className2?: string;
 }
 
 const formatDate = (date: Date) =>
@@ -21,8 +23,8 @@ const getNextWateringDate = (
   const dayMs = 1000 * 60 * 60 * 24;
 
   switch (frequency.type) {
-    case "daily":
-      return new Date(baseDate.getTime() + dayMs);
+    case "every-day":
+      return new Date(baseDate.getTime() + dayMs * frequency.interval);
 
     case "every-week":
       return new Date(baseDate.getTime() + dayMs * 7 * frequency.interval);
@@ -60,8 +62,10 @@ const getNextWateringDate = (
 const NextWatered: React.FC<NextWateredProps> = ({
   lastWatered,
   frequency,
+  className,
+  className2,
 }) => {
-  if (!lastWatered) return <p>Next watering: (never watered)</p>;
+  if (!lastWatered) return;
 
   const nextDate = getNextWateringDate(lastWatered, frequency);
   nextDate.setHours(12, 0, 0, 0);
@@ -77,9 +81,12 @@ const NextWatered: React.FC<NextWateredProps> = ({
   else message = `${Math.abs(diff)} day${Math.abs(diff) > 1 ? "s" : ""} ago`;
 
   return (
-    <p className="border-4 px-3 py-1 bg-white rounded-xl">
-      <span className="font-bold underline">Next watering: </span>{formatDate(nextDate)} {message}
-    </p>
+    <div className="flex flex-col gap-2">
+      <p className={`${className}`}>Next watering</p>
+      <p className={`${className2}`}>
+        {formatDate(nextDate)} {message}
+      </p>
+    </div>
   );
 };
 

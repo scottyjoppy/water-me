@@ -1,6 +1,6 @@
 export type Frequency =
-  | { type: "daily" }
   | { type: "multiple-weekly"; days: Day[] }
+  | { type: "every-day"; interval: number }
   | { type: "every-week"; interval: number }
   | { type: "every-month"; interval: number };
 

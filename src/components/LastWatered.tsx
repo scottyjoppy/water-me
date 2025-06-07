@@ -2,6 +2,8 @@ import React from "react";
 
 interface LastWateredProps {
   lastWatered: string; // expect ISO date string or null
+  className?: string;
+  className2?: string;
 }
 
 const formatDate = (LastWatered: string) => {
@@ -16,9 +18,18 @@ const daysDifference = (lastWatered: string) => {
   return Math.floor((now - oldDate) / (1000 * 60 * 60 * 24));
 };
 
-const LastWatered: React.FC<LastWateredProps> = ({ lastWatered }) => {
+const LastWatered: React.FC<LastWateredProps> = ({
+  lastWatered,
+  className,
+  className2,
+}) => {
   if (!lastWatered) {
-    return <p>Last watered: Never</p>;
+    return (
+      <>
+        <p className={`${className}`}>Last watered</p>
+        <p className={`${className2}`}>Never</p>
+      </>
+    );
   }
 
   const diff = daysDifference(lastWatered);
@@ -26,16 +37,18 @@ const LastWatered: React.FC<LastWateredProps> = ({ lastWatered }) => {
   let message = "";
 
   if (diff === 0) {
-    message = "(Today)";
+    message = "- Today";
   } else {
-    // diff > 0 means lastWatered was days ago
     message = `(${diff} day${diff > 1 ? "s" : ""} ago)`;
   }
 
   return (
-    <p className="border-4 px-3 py-1 bg-white rounded-xl">
-      <span className="font-bold underline">Last watered: </span>{formatDate(lastWatered)} {message}
-    </p>
+    <div className="flex flex-col gap-2">
+      <p className={`${className}`}>Last watered</p>
+      <p className={`${className2}`}>
+        {formatDate(lastWatered)} {message}
+      </p>
+    </div>
   );
 };
 

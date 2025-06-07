@@ -1,30 +1,20 @@
 "use client";
 
+import { Day, days } from "@/types/databaseValues";
 import { easeInOut, motion } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { usePlantContext } from "./PlantContext";
 
 const PlantForm: React.FC = () => {
+  const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
   const [plantName, setPlantName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
   const [type, setType] = useState("daily");
   const [interval, setInterval] = useState(1);
   const [selectedDays, setSelectedDays] = useState<Day[]>([]);
-
-  const days = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-  ];
-
-  type Day = (typeof days)[number];
 
   const toggleDay = (day: Day) => {
     setSelectedDays((prevSelected) =>
@@ -34,6 +24,8 @@ const PlantForm: React.FC = () => {
     );
   };
 
+  const router = useRouter();
+  const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -110,6 +102,7 @@ const PlantForm: React.FC = () => {
     await fetchPlants();
     setPlantName("");
     setFormVisible(false);
+    pathname === "/" ? router.push("myplants") : "";
   };
 
   return (
@@ -161,8 +154,8 @@ const PlantForm: React.FC = () => {
             onChange={(e) => setType(e.target.value)}
             className="px-3 py-1 rounded-xl h-10 border-4 bg-white font-bold uppercase outline-none"
           >
-            <option value="daily">Daily</option>
             <option value="multiple-weekly">Multiple days per week</option>
+            <option value="every-week">Every # days</option>
             <option value="every-week">Every # weeks</option>
             <option value="every-month">Every # months</option>
           </select>
@@ -190,12 +183,12 @@ const PlantForm: React.FC = () => {
               ))}
             </div>
           )}
-          {(type === "every-week" || type === "every-month") && (
+          {(type === "every-day" || type === "every-week" || type === "every-month") && (
             <div className="flex gap-2 items-center">
               <input
                 type="number"
                 min={1}
-                max={type === "every-week" ? 4 : 36}
+                max={50}
                 value={interval}
                 onChange={(e) => setInterval(Number(e.target.value))}
                 className="h-10 w-16 px-3 py-1 rounded-xl border-4 bg-white"

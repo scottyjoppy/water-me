@@ -10,6 +10,7 @@ const PlantWateredSelector: React.FC<Props> = ({
   setLastWatered,
 }) => {
   const formatLastWatered = lastWatered.split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div className="grid grid-cols-2 items-center bg-[#e0998e] px-3 py-5 rounded-2xl">
@@ -21,6 +22,7 @@ const PlantWateredSelector: React.FC<Props> = ({
         type="date"
         className="bg-white w-full border-4 rounded-xl px-3 py-1 outline-none"
         required
+        max={today}
         value={formatLastWatered}
         onChange={(e) => setLastWatered(e.target.value)}
       />

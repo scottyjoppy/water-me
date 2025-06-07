@@ -18,7 +18,7 @@ const PlantList = () => {
     setPlantToEdit((prev) => (prev?.id === plant.id ? null : plant));
   };
 
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
   const pageCount = Math.ceil(plants.length / itemsPerPage);
 
   const startIndex = page * itemsPerPage;
@@ -52,42 +52,48 @@ const PlantList = () => {
       <section className="p-4 w-full flex flex-col gap-6">
         <h2 className="text-7xl font-bold text-center underline">Plant List</h2>
 
-        <ul className="flex flex-col gap-2 sm:grid sm:grid-cols-3 mx-auto ">
+        <ul className="flex flex-col gap-2 sm:grid sm:grid-cols-3 mx-auto">
           {currentPlants.length > 0 ? (
             currentPlants.map((plant) => {
               const wateredToday = isToday(plant.last_watered);
               return (
                 <li
                   key={plant.id}
-                  className="flex z-0 relative sm:flex-col sm:justify-between justify-center border-4 p-3 rounded-xl bg-green-300 col-span-1 sm:h-[300px] sm:w-[200px]"
+                  className="flex relative sm:flex-col sm:justify-between  justify-center border-4 p-3 rounded-xl bg-green-300 col-span-1 sm:h-[300px] sm:w-[300px]"
                 >
                   <button
                     onClick={() => {
                       toggleEditForm(plant);
                     }}
-                    className="absolute rounded-bl-2xl top-0 right-0 text-white bg-black h-8 w-8 hover:cursor-pointer"
+                    className="absolute rounded-bl-2xl rounded-tr-lg top-0 right-0 text-white bg-black h-8 w-8 hover:cursor-pointer hover:scale-105 translate-x-0.5 -translate-y-0.5 origin-top-right hover:[&>*]:-rotate-5 transition-all"
                   >
-                    <div className="translate-x-[2px] -translate-y-[2px]">
+                    <div className="translate-x-[2px] -translate-y-[2px] transition-all">
                       ✎
                     </div>
                   </button>
                   <h2 className="uppercase font-bold text-3xl underline leading-4">
                     {plant.plant_name}
                   </h2>
-                  <LastWatered lastWatered={plant.last_watered} />
+                  <LastWatered
+                    lastWatered={plant.last_watered}
+                    className="font-bold text-center uppercase"
+                    className2="border-4 rounded-xl px-3 py-1 bg-white text-center"
+                  />
                   <NextWatered
                     lastWatered={plant.last_watered}
                     frequency={plant.frequency}
+                    className="font-bold text-center uppercase"
+                    className2="border-4 rounded-xl px-3 py-1 bg-white text-center"
                   />
                   <div className="flex justify-between mx-auto">
                     <button
                       onClick={() => handleWater(plant.id)}
                       disabled={loadingId === plant.id || wateredToday}
-                      className={`uppercase w-fit px-2 font-bold text-2xl rounded-2xl border-4 transition-all hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1
+                      className={`uppercase w-fit px-2 font-bold text-2xl rounded-2xl border-4 transition-all
                       ${
                         wateredToday
-                          ? "bg-gray-400"
-                          : "bg-blue-400  hover:cursor-pointer"
+                          ? "bg-gray-400 hover hover:brightness-90"
+                          : "bg-blue-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer"
                       }`}
                     >
                       {wateredToday ? "Watered" : "Water"}
@@ -97,7 +103,9 @@ const PlantList = () => {
               );
             })
           ) : (
-            <p>No plants yet, add some!</p>
+            <p className="border-4 col-span-full p-5 uppercase rounded-xl text-5xl font-bold bg-white">
+              No plants yet, add some!
+            </p>
           )}
         </ul>
 

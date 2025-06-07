@@ -59,7 +59,11 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
 
       if (freq.type === "multiple-weekly") {
         setSelectedDays(freq.days || []);
-      } else if (freq.type === "every-week" || freq.type === "every-month") {
+      } else if (
+        freq.type === "every-day" ||
+        "every-week" ||
+        freq.type === "every-month"
+      ) {
         setInterval(freq.interval);
       }
     }
@@ -94,8 +98,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     const frequencyData =
       type === "multiple-weekly"
         ? { type, days: selectedDays }
-        : type === "daily"
-        ? { type }
         : { type, interval };
 
     const { error } = await supabase

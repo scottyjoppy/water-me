@@ -34,8 +34,8 @@ const PlantFrequencySelector: React.FC<FrequencySelectorProps> = ({
           onChange={(e) => setType(e.target.value)}
           className="px-3 py-1 rounded-xl h-10 border-4 bg-white font-bold uppercase outline-none"
         >
-          <option value="daily">Daily</option>
           <option value="multiple-weekly">Multiple days per week</option>
+          <option value="every-day">Every # days</option>
           <option value="every-week">Every # weeks</option>
           <option value="every-month">Every # months</option>
         </select>
@@ -64,12 +64,12 @@ const PlantFrequencySelector: React.FC<FrequencySelectorProps> = ({
           </div>
         )}
 
-        {(type === "every-week" || type === "every-month") && (
+        {(type === "every-day" || type === "every-week" || type === "every-month") && (
           <div className="flex gap-2 items-center">
             <input
               type="number"
               min={1}
-              max={type === "every-week" ? 4 : 36}
+              max={50}
               value={interval}
               onChange={(e) => setInterval(Number(e.target.value))}
               className="h-10 w-16 px-3 py-1 rounded-xl border-4 bg-white"
