@@ -1,11 +1,11 @@
 "use client";
 
-import { Plant } from "@/app/page";
-import { movePlant } from "@/app/utils/movePlants";
-import { normalizePositions } from "@/app/utils/normalizeOrder";
+import { movePlant } from "@/utils/movePlants";
+import { normalizePositions } from "@/utils/normalizeOrder";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
+import { Plant } from "../types/databaseValues";
 import { usePlantContext } from "./PlantContext";
 import PlantFrequencySelector from "./PlantFrequencySelector";
 import PlantNameInput from "./PlantNameInput";

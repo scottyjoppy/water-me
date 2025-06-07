@@ -1,26 +1,19 @@
 import React from "react";
 
 interface LastWateredProps {
-  lastWatered: string | null; // expect ISO date string or null
+  lastWatered: string; // expect ISO date string or null
 }
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-GB").replace(/\//g, "-"); // DD-MM-YYYY
+const formatDate = (LastWatered: string) => {
+  const date = new Date(LastWatered);
+  console.log(date);
+  return String(date.toUTCString().split(" ").slice(0, 4).join(" "));
 };
+const daysDifference = (lastWatered: string) => {
+  const oldDate = new Date(lastWatered).setHours(0, 0, 0, 0);
+  const now = new Date().setHours(0, 0, 0, 0);
 
-const daysDifference = (dateStr: string) => {
-  const date = new Date(dateStr);
-  const now = new Date();
-
-  // Strip time to midnight
-  date.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-
-  const diffTime = date.getTime() - now.getTime(); // flipped for sign
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-  return diffDays;
+  return Math.floor((now - oldDate) / (1000 * 60 * 60 * 24));
 };
 
 const LastWatered: React.FC<LastWateredProps> = ({ lastWatered }) => {
@@ -34,10 +27,9 @@ const LastWatered: React.FC<LastWateredProps> = ({ lastWatered }) => {
 
   if (diff === 0) {
     message = "(Today)";
-  } else if (diff > 0) {
-    message = `(in ${diff} day${diff > 1 ? "s" : ""})`;
   } else {
-    message = `(${Math.abs(diff)} day${Math.abs(diff) > 1 ? "s" : ""} ago)`;
+    // diff > 0 means lastWatered was days ago
+    message = `(${diff} day${diff > 1 ? "s" : ""} ago)`;
   }
 
   return (

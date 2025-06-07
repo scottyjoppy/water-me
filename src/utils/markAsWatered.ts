@@ -1,10 +1,8 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "@/supabaseClient";
 
 export const markAsWatered = async (plantId: number) => {
-  // Get today's date in YYYY-MM-DD format (without time)
   const today = new Date().toISOString().slice(0, 10);
 
-  // Fetch the current last_watered date from the DB for this plant
   const { data, error: fetchError } = await supabase
     .from("plants")
     .select("last_watered")
@@ -21,13 +19,7 @@ export const markAsWatered = async (plantId: number) => {
     return;
   }
 
-  // Convert last_watered to string YYYY-MM-DD if it exists
-  const lastWateredDate = data.last_watered
-    ? data.last_watered.slice(0, 10)
-    : null;
-
-  // If last_watered is already today, no need to update
-  if (lastWateredDate === today) {
+  if (data.last_watered === today) {
     console.log("Plant already marked as watered today");
     return;
   }

@@ -1,6 +1,6 @@
 // supabaseClient.ts
 import { createClient } from "@supabase/supabase-js";
-import type { Plant } from "../types/supabase";
+import { Plant } from "./types/databaseValues";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;

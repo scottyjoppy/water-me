@@ -1,8 +1,8 @@
 "use client";
 
-import { Plant } from "@/app/page";
 import { supabase } from "@/supabaseClient";
 import { createContext, useContext, useEffect, useState } from "react";
+import { Plant } from "../types/databaseValues";
 
 type PlantContextType = {
   plants: Plant[];
@@ -27,7 +27,10 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({
   const [formVisible, setFormVisible] = useState(false);
 
   const fetchPlants = async () => {
-    const { data, error } = await supabase.from("plants").select("*").order("sort_order", { ascending: true });
+    const { data, error } = await supabase
+      .from("plants")
+      .select("*")
+      .order("sort_order", { ascending: true });
     if (!error) {
       setPlants(data as Plant[]);
     } else {

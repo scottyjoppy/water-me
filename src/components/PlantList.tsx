@@ -1,10 +1,11 @@
 "use client";
 
-import { Plant } from "@/app/page";
-import { markAsWatered } from "@/app/utils/markAsWatered";
+import { markAsWatered } from "@/utils/markAsWatered";
 import { useState } from "react";
+import { Plant } from "../types/databaseValues";
 import EditForm from "./EditForm";
 import LastWatered from "./LastWatered";
+import NextWatered from "./NextWatered";
 import { usePlantContext } from "./PlantContext";
 
 const PlantList = () => {
@@ -25,10 +26,10 @@ const PlantList = () => {
 
   const currentPlants = plants.slice(startIndex, endIndex);
 
-  const isToday = (dateStr: string | null) => {
-    if (!dateStr) return false;
+  const isToday = (date: string) => {
+    if (!date) return false;
     const today = new Date().toISOString().slice(0, 10);
-    return dateStr.slice(0, 10) === today;
+    return new Date(date).toISOString().slice(0, 10) === today;
   };
 
   const handlePrev = () => {
@@ -74,6 +75,10 @@ const PlantList = () => {
                     {plant.plant_name}
                   </h2>
                   <LastWatered lastWatered={plant.last_watered} />
+                  <NextWatered
+                    lastWatered={plant.last_watered}
+                    frequency={plant.frequency}
+                  />
                   <div className="flex justify-between mx-auto">
                     <button
                       onClick={() => handleWater(plant.id)}

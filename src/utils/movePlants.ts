@@ -1,5 +1,5 @@
 import { supabase } from "@/supabaseClient";
-import { Plant } from "../page";
+import { Plant } from "../types/databaseValues";
 
 export const swapPositions = async (a: Plant, b: Plant) => {
   if (a.id === b.id || a.sort_order === b.sort_order) return;
