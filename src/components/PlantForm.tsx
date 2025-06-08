@@ -102,7 +102,10 @@ const PlantForm: React.FC = () => {
     await fetchPlants();
     setPlantName("");
     setFormVisible(false);
-    pathname === "/" ? router.push("myplants") : "";
+
+    if (pathname === "/") {
+      router.push("/myplants");
+    }
   };
 
   return (
@@ -183,7 +186,9 @@ const PlantForm: React.FC = () => {
               ))}
             </div>
           )}
-          {(type === "every-day" || type === "every-week" || type === "every-month") && (
+          {(type === "every-day" ||
+            type === "every-week" ||
+            type === "every-month") && (
             <div className="flex gap-2 items-center">
               <input
                 type="number"
