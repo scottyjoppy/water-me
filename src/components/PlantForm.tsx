@@ -158,7 +158,7 @@ const PlantForm: React.FC = () => {
             className="px-3 py-1 rounded-xl h-10 border-4 bg-white font-bold uppercase outline-none"
           >
             <option value="multiple-weekly">Multiple days per week</option>
-            <option value="every-week">Every # days</option>
+            <option value="every-day">Every # days</option>
             <option value="every-week">Every # weeks</option>
             <option value="every-month">Every # months</option>
           </select>
