@@ -43,7 +43,7 @@ const LastWatered: React.FC<LastWateredProps> = ({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       <p className={`${className}`}>Last watered</p>
       <p className={`${className2}`}>
         {formatDate(lastWatered)} {message}

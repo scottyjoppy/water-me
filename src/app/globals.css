@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 button {
-    outline: none;
-    user-select: none;
+  outline: none;
+  user-select: none;
+}
+
+.tb {
+  @apply border-red-500 border-10;
 }

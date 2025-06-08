@@ -9,8 +9,8 @@ const Navbar = () => {
   const { formVisible, setFormVisible } = usePlantContext();
   return (
     <>
-      <nav className="fixed w-full bg-white border-10 p-3 grid grid-cols-4 ">
-        <div className="col-span-1 uppercase font-bold text-2xl flex justify-center">
+      <nav className="z-100 fixed w-full bg-white border-10 p-3 grid grid-cols-4 uppercase font-bold text-[clamp(1rem,3vw,1.5rem)] whitespace-nowrap">
+        <div className="col-span-1 flex justify-center transition-none">
           <Link
             href="/"
             className="hover:underline hover:text-black/70 hover:scale-105 transition-all"
@@ -18,7 +18,7 @@ const Navbar = () => {
             Home
           </Link>
         </div>
-        <div className="col-span-2 uppercase font-bold text-2xl flex justify-center">
+        <div className="col-span-2 flex justify-center">
           <Link
             href="/myplants"
             className="hover:underline hover:text-black/70 hover:scale-105 transition-all"
@@ -26,7 +26,7 @@ const Navbar = () => {
             Your Plants
           </Link>
         </div>
-        <div className="col-span-1 font-bold text-2xl flex justify-center">
+        <div className="col-span-1 flex justify-center">
           <button
             onClick={() => setFormVisible(true)}
             className="uppercase hover:underline hover:text-black/70 hover:scale-105 transition-all hover:cursor-pointer"
