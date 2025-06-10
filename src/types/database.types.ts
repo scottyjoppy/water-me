@@ -9,13 +9,46 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      plants: {
+        Row: {
+          frequency: Json | null
+          id: string
+          last_watered: string | null
+          plant_name: string
+          sort_order: number
+        }
+        Insert: {
+          frequency?: Json | null
+          id?: string
+          last_watered?: string | null
+          plant_name: string
+          sort_order: number
+        }
+        Update: {
+          frequency?: Json | null
+          id?: string
+          last_watered?: string | null
+          plant_name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_next_custom_id_and_sort_order: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          next_custom_id: number
+          next_sort_order: number
+        }[]
+      }
+      renumber_sort_order: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

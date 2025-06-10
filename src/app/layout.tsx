@@ -10,10 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased font-sans">
-        <PlantProvider>
-          <Navbar />
-          {children}
-        </PlantProvider>
+        {children}
       </body>
     </html>
   );
