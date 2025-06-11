@@ -5,7 +5,7 @@ export type Frequency =
   | { type: "every-month"; interval: number };
 
 export type Plant = {
-  id: number;
+  id: string;
   plant_name: string;
   frequency: Frequency;
   last_watered: string;
@@ -21,7 +21,7 @@ export type Day =
   | "Friday"
   | "Saturday";
 
-  export const days: Day[] = [
+export const days: Day[] = [
   "Sunday",
   "Monday",
   "Tuesday",

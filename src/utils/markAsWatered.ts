@@ -1,6 +1,8 @@
-import { supabase } from "@/supabaseClient";
+import { createClient } from "./supabase/client";
 
-export const markAsWatered = async (plantId: number) => {
+const supabase = createClient();
+
+export const markAsWatered = async (plantId: string) => {
   const today = new Date().toISOString().slice(0, 10);
 
   const { data, error: fetchError } = await supabase

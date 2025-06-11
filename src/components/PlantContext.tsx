@@ -1,8 +1,8 @@
 "use client";
 
-import { supabase } from "@/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Plant } from "../types/databaseValues";
+import { Plant } from "@/types/databaseValues";
 
 type PlantContextType = {
   plants: Plant[];
@@ -10,6 +10,8 @@ type PlantContextType = {
   formVisible: boolean;
   setFormVisible: (value: boolean) => void;
 };
+
+const supabase = createClient();
 
 const PlantContext = createContext<PlantContextType | undefined>(undefined);
 export const usePlantContext = () => {

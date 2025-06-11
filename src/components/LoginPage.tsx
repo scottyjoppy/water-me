@@ -1,10 +1,12 @@
 "use client";
 
-import { supabase } from "@/supabaseClient";
+import { createClient } from "@/utils/supabase/client"; // adjust your path
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const supabase = createClient();
 
 interface Props {
   view: "sign_in" | "sign_up";
@@ -17,8 +19,7 @@ const CustomAuthForm = ({ view }: Props) => {
       ? window.location.origin
       : process.env.NEXT_PUBLIC_SITE_URL || "";
 
-  const redirectTo =
-    view === "sign_up" ? `${origin}/home` : `${origin}/dashboard`;
+  const redirectTo = view === "sign_up" ? `${origin}/home` : `${origin}/`;
 
   // Form state
   const [email, setEmail] = useState("");
@@ -166,14 +167,18 @@ const CustomAuthForm = ({ view }: Props) => {
             <>
               Don’t have an account?{" "}
               <Link href="/register">
-                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all">Register Here</div>
+                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all">
+                  Register Here
+                </div>
               </Link>
             </>
           ) : (
             <>
               Already have an account?{" "}
               <Link href="/login">
-                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all">Login Here</div>
+                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all">
+                  Login Here
+                </div>
               </Link>
             </>
           )}

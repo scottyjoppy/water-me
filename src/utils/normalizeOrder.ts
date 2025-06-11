@@ -1,4 +1,6 @@
-import { supabase } from "@/supabaseClient";
+import { createClient } from "./supabase/client";
+
+const supabase = createClient();
 
 export const normalizePositions = async () => {
   // Use correct table name consistently

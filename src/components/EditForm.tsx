@@ -2,9 +2,9 @@
 
 import { movePlant } from "@/utils/movePlants";
 import { normalizePositions } from "@/utils/normalizeOrder";
+import { createClient } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { supabase } from "../supabaseClient";
 import { Day, Plant } from "../types/databaseValues";
 import { usePlantContext } from "./PlantContext";
 import PlantFrequencySelector from "./PlantFrequencySelector";
@@ -15,6 +15,8 @@ type EditFormProps = {
   plantToEdit: Plant | null;
   onClose: () => void;
 };
+
+const supabase = createClient();
 
 const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [plantName, setPlantName] = useState("");
@@ -100,6 +102,8 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
         ? { type, days: selectedDays }
         : { type, interval };
 
+    if (!plantToEdit) return;
+
     const { error } = await supabase
       .from("plants")
       .update({
@@ -107,7 +111,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
         frequency: frequencyData,
         last_watered: lastWatered,
       })
-      .eq("id", plantToEdit?.id);
+      .eq("id", plantToEdit.id);
 
     setIsSubmitting(false);
 
