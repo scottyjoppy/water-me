@@ -1,15 +1,18 @@
+import { updateSession } from "@/utils/supabase/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const access = request.cookies.get("sb-access-token")?.value;
+export async function middleware(request: NextRequest) {
+  const response = await updateSession(request);
 
-  if (!access) {
-    // user is not logged‑in → bounce to /login
+  const session = request.cookies.get("sb-access-token")?.value;
+  if (!session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  return NextResponse.next();
 }
+
 export const config = {
-  matcher: ["/home"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|login|register|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
+
