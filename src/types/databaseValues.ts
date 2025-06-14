@@ -10,6 +10,7 @@ export type Plant = {
   frequency: Frequency;
   last_watered: string;
   sort_order: number;
+  user_id: string;
 };
 
 export type Day =

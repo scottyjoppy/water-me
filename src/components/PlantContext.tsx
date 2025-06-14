@@ -1,8 +1,8 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
-import { createContext, useContext, useEffect, useState } from "react";
 import { Plant } from "@/types/databaseValues";
+import { supabase } from "@/utils/supabase/client";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type PlantContextType = {
   plants: Plant[];
@@ -10,8 +10,6 @@ type PlantContextType = {
   formVisible: boolean;
   setFormVisible: (value: boolean) => void;
 };
-
-const supabase = createClient();
 
 const PlantContext = createContext<PlantContextType | undefined>(undefined);
 export const usePlantContext = () => {
@@ -27,21 +25,55 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [formVisible, setFormVisible] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Get current user on mount
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Error getting user:", error.message);
+        setUserId(null);
+      } else if (user) {
+        setUserId(user.id);
+      } else {
+        setUserId(null);
+      }
+    };
+
+    getUser();
+  }, []);
 
   const fetchPlants = async () => {
+    if (!userId) {
+      setPlants([]);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("plants")
       .select("*")
+      .eq("user_id", userId)
       .order("sort_order", { ascending: true });
+
     if (!error) {
       setPlants(data as Plant[]);
     } else {
       console.error("Failed to fetch plants:", error.message);
     }
   };
+
+  // Refetch plants when userId is set
   useEffect(() => {
-    fetchPlants();
-  }, []);
+    if (userId) {
+      fetchPlants();
+    }
+  }, [userId]);
+
   return (
     <PlantContext.Provider
       value={{ plants, fetchPlants, formVisible, setFormVisible }}

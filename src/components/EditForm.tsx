@@ -2,7 +2,7 @@
 
 import { movePlant } from "@/utils/movePlants";
 import { normalizePositions } from "@/utils/normalizeOrder";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { Day, Plant } from "../types/databaseValues";
@@ -15,8 +15,6 @@ type EditFormProps = {
   plantToEdit: Plant | null;
   onClose: () => void;
 };
-
-const supabase = createClient();
 
 const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [plantName, setPlantName] = useState("");

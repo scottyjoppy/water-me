@@ -11,7 +11,7 @@ import { usePlantContext } from "./PlantContext";
 const PlantList = () => {
   const { plants, fetchPlants } = usePlantContext();
   const [page, setPage] = useState(0);
-  const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [plantToEdit, setPlantToEdit] = useState<Plant | null>(null);
 
   const itemsPerPage = 6;
@@ -27,7 +27,7 @@ const PlantList = () => {
     return new Date(date).toISOString().slice(0, 10) === today;
   };
 
-  const handleWater = async (id: number) => {
+  const handleWater = async (id: string) => {
     setLoadingId(id);
     await markAsWatered(id);
     await fetchPlants();

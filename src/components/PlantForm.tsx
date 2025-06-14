@@ -4,7 +4,7 @@ import { Day, days } from "@/types/databaseValues";
 import { easeInOut, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { usePlantContext } from "./PlantContext";
 
 const PlantForm: React.FC = () => {

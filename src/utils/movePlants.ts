@@ -1,7 +1,5 @@
 import { Plant } from "../types/databaseValues";
-import { createClient } from "./supabase/client";
-
-const supabase = createClient();
+import { supabase } from "@/utils/supabase/client"
 
 export const swapPositions = async (a: Plant, b: Plant) => {
   if (a.id === b.id || a.sort_order === b.sort_order) return;

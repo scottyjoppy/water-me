@@ -1,6 +1,4 @@
-import { createClient } from "./supabase/client";
-
-const supabase = createClient();
+import { supabase } from "@/utils/supabase/client";
 
 export const markAsWatered = async (plantId: string) => {
   const today = new Date().toISOString().slice(0, 10);

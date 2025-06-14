@@ -1,5 +1,3 @@
-import Navbar from "@/components/Navbar";
-import { PlantProvider } from "@/components/PlantContext";
 import "./globals.css";
 
 export default function RootLayout({
@@ -9,9 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans">
-        {children}
-      </body>
+      <body className="antialiased font-sans">{children}</body>
     </html>
   );
 }

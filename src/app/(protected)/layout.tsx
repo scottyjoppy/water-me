@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { PlantProvider } from "@/components/PlantContext";
 
 export default function RootLayout({
@@ -6,8 +7,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <UserProvider>
-    <PlantProvider>{children}</PlantProvider>
-    // {/* </UserProvider> */}
+    
+    <PlantProvider><Navbar />{children}</PlantProvider>
   );
 }

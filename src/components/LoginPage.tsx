@@ -1,12 +1,10 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client"; // adjust your path
+import { supabase } from "@/utils/supabase/client";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const supabase = createClient();
 
 interface Props {
   view: "sign_in" | "sign_up";
@@ -44,8 +42,15 @@ const CustomAuthForm = ({ view }: Props) => {
         email,
         password,
       });
-      if (error) setError(error.message);
-      else router.push(redirectTo);
+      if (error) {
+        if (error.message.toLowerCase().includes("invalid login credentials")) {
+          setError("Incorrect email or password.");
+        } else {
+          setError(error.message);
+        }
+      } else {
+        router.push(redirectTo);
+      }
     } else {
       // sign_up
       const { error } = await supabase.auth.signUp({
@@ -53,13 +58,20 @@ const CustomAuthForm = ({ view }: Props) => {
         password,
         options: { emailRedirectTo: redirectTo },
       });
-      if (error) setError(error.message);
-      else {
-        // Typically signUp just sends confirmation email, you may want to redirect or show a message
-        alert("Check your email for confirmation link.");
-        router.push("/login"); // Redirect to login after signup or change as needed
+
+      if (error) {
+        if (error.message.toLowerCase().includes("already registered")) {
+          setError("This email is already registered. Try logging in.");
+          setTimeout(() => router.push("/login"), 3000);
+        } else {
+          setError(error.message);
+        }
+      } else {
+        alert("Check your email for a confirmation link.");
+        router.push("/login");
       }
     }
+
     setLoading(false);
   };
 
@@ -68,7 +80,13 @@ const CustomAuthForm = ({ view }: Props) => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo },
+      options: {
+        redirectTo: `${origin}/api/auth/callback`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
     });
     if (error) setError(error.message);
     setLoading(false);
