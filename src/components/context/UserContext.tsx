@@ -1,7 +1,7 @@
 "use client";
 
+import { supabase } from "@/utils/supabase/client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client"; // your browser client
 
 // Define the user type (adjust according to your DB schema or Supabase types)
 type User = {
@@ -19,7 +19,6 @@ type UserContextType = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const supabase = createClient();
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
 
