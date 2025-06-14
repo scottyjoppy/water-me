@@ -32,13 +32,9 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({
     const getUser = async () => {
       const {
         data: { user },
-        error,
       } = await supabase.auth.getUser();
 
-      if (error) {
-        console.error("Error getting user:", error.message);
-        setUserId(null);
-      } else if (user) {
+      if (user) {
         setUserId(user.id);
       } else {
         setUserId(null);

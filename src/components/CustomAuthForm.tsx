@@ -6,18 +6,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Props {
-  view: "sign_in" | "sign_up";
-}
-
-const CustomAuthForm = ({ view }: Props) => {
+type Props = {
+  viewParam: string;
+};
+const CustomAuthForm = ({ viewParam }: Props) => {
   const router = useRouter();
+  const view = viewParam === "login" ? "sign_in" : "sign_up";
+
   const origin =
     typeof window !== "undefined"
       ? window.location.origin
       : process.env.NEXT_PUBLIC_SITE_URL || "";
 
-  const redirectTo = view === "sign_up" ? `${origin}/home` : `${origin}/`;
+  const redirectTo = `${origin}/home`;
 
   // Form state
   const [email, setEmail] = useState("");
@@ -25,13 +26,11 @@ const CustomAuthForm = ({ view }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Update document title
   useEffect(() => {
     document.title =
       view === "sign_in" ? "Login | Water Me Now" : "Register | Water Me Now";
   }, [view]);
 
-  // Handle email/password login or registration
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -75,13 +74,12 @@ const CustomAuthForm = ({ view }: Props) => {
     setLoading(false);
   };
 
-  // Handle Google OAuth
   const handleGoogleSignIn = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${origin}/api/auth/callback`,
+        redirectTo: `${origin}/api/auth/callback?next=/home`,
         queryParams: {
           access_type: "offline",
           prompt: "consent",
@@ -155,6 +153,7 @@ const CustomAuthForm = ({ view }: Props) => {
           disabled={loading}
           className="flex justify-center gap-5 hover-up transition-all w-full px-3 py-1 border-4 rounded-xl outline-none bg-white hover:font-bold hover:cursor-pointer disabled:opacity-50"
         >
+          {/* Google SVG Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

@@ -24,7 +24,10 @@ const Home = () => {
             <hr className="border-2" />
           </div>
         </div>
-        <Link className="font-bold text-2xl border-4 bg-red-400 rounded-2xl hover-up transition-all px-4 py-1" href="/register">
+        <Link
+          className="font-bold text-2xl border-4 bg-red-400 rounded-2xl hover-up transition-all px-4 py-1"
+          href="/register"
+        >
           Sign Up Now!
         </Link>
       </section>
