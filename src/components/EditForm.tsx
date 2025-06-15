@@ -1,12 +1,12 @@
 "use client";
 
+import { useUserPlants } from "@/hooks/useUserPlants";
 import { movePlant } from "@/utils/movePlants";
 import { normalizePositions } from "@/utils/normalizeOrder";
 import { supabase } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import { Day, Plant } from "../types/databaseValues";
-import { usePlantContext } from "./PlantContext";
 import PlantFrequencySelector from "./PlantFrequencySelector";
 import PlantNameInput from "./PlantNameInput";
 import PlantWateredSelector from "./PlantWateredSelector";
@@ -26,7 +26,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { plants, fetchPlants } = usePlantContext();
+  const { plants } = useUserPlants();
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -35,14 +35,12 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const handleMoveUp = async () => {
     if (index > 0) {
       await movePlant(plants, index, "up");
-      await fetchPlants(); // refresh after move
     }
   };
 
   const handleMoveDown = async () => {
     if (index >= 0 && index < plants.length - 1) {
       await movePlant(plants, index, "down");
-      await fetchPlants(); // refresh after move
     }
   };
 
@@ -119,7 +117,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     }
 
     await normalizePositions();
-    await fetchPlants();
     onClose();
   };
 
@@ -146,7 +143,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
       return;
     }
 
-    await fetchPlants();
     await normalizePositions();
     onClose();
   };

@@ -81,7 +81,7 @@ const NextWatered: React.FC<NextWateredProps> = ({
   else message = `${Math.abs(diff)} day${Math.abs(diff) > 1 ? "s" : ""} ago`;
 
   return (
-    <div >
+    <div>
       <p className={`${className}`}>Next watering</p>
       <p className={`${className2}`}>
         {formatDate(nextDate)} {message}

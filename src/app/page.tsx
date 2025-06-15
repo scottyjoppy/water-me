@@ -1,8 +1,11 @@
 "use client";
 
+import { useAuthSession } from "@/hooks/useAuthSession";
 import Link from "next/link";
 
 const Home = () => {
+  const { session } = useAuthSession();
+
   return (
     <>
       <section className="flex flex-col gap-10 justify-center items-center h-screen border-10 bg-amber-300">
@@ -24,12 +27,14 @@ const Home = () => {
             <hr className="border-2" />
           </div>
         </div>
-        <Link
-          className="font-bold text-2xl border-4 bg-red-400 rounded-2xl hover-up transition-all px-4 py-1"
-          href="/register"
-        >
-          Sign Up Now!
-        </Link>
+        {!session && (
+          <Link
+            className="font-bold text-2xl border-4 bg-red-400 rounded-2xl hover-up transition-all px-4 py-1"
+            href="/register"
+          >
+            Sign Up Now!
+          </Link>
+        )}
       </section>
     </>
   );

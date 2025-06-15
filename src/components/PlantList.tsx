@@ -1,15 +1,15 @@
 "use client";
 
+import { useUserPlants } from "@/hooks/useUserPlants";
 import { markAsWatered } from "@/utils/markAsWatered";
 import { useState } from "react";
 import { Plant } from "../types/databaseValues";
 import EditForm from "./EditForm";
 import LastWatered from "./LastWatered";
 import NextWatered from "./NextWatered";
-import { usePlantContext } from "./PlantContext";
 
 const PlantList = () => {
-  const { plants, fetchPlants } = usePlantContext();
+  const { plants } = useUserPlants();
   const [page, setPage] = useState(0);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [plantToEdit, setPlantToEdit] = useState<Plant | null>(null);
@@ -30,7 +30,6 @@ const PlantList = () => {
   const handleWater = async (id: string) => {
     setLoadingId(id);
     await markAsWatered(id);
-    await fetchPlants();
     setLoadingId(null);
   };
 

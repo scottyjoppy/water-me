@@ -1,14 +1,14 @@
 "use client";
 
 import { Day, days } from "@/types/databaseValues";
+import { supabase } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { supabase } from "@/utils/supabase/client";
 import { usePlantContext } from "./PlantContext";
 
 const PlantForm: React.FC = () => {
-  const { fetchPlants, formVisible, setFormVisible } = usePlantContext();
+  const { formVisible, setFormVisible } = usePlantContext();
   const [plantName, setPlantName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,7 +99,6 @@ const PlantForm: React.FC = () => {
       return;
     }
 
-    await fetchPlants();
     setPlantName("");
     setFormVisible(false);
 

@@ -7,7 +7,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   const { data, error } = await supabase.auth.getUser();
 
   if (!data.user) {
-    console.log("User feth error:", error)
+    console.log("User fetch error:", error)
     redirect("/login");
   }
 
