@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
@@ -9,15 +10,14 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const checkCookie = () => {
-      const loggedIn = document.cookie.includes("authToken");
-      if (!loggedIn && session) {
-        logout();
-        router.push("/login"); // redirect to login page
+    const interval = setInterval(async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session && session) {
+        await logout();
+        router.push("/login");
       }
-    };
+    }, 10000); // check every 10 seconds
 
-    const interval = setInterval(checkCookie, 10000);
     return () => clearInterval(interval);
   }, [session, logout, router]);
 

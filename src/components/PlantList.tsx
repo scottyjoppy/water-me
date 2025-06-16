@@ -9,7 +9,7 @@ import LastWatered from "./LastWatered";
 import NextWatered from "./NextWatered";
 
 const PlantList = () => {
-  const { plants } = useUserPlants();
+  const { plants, isLoading } = useUserPlants();
   const [page, setPage] = useState(0);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [plantToEdit, setPlantToEdit] = useState<Plant | null>(null);
@@ -45,7 +45,11 @@ const PlantList = () => {
         </h2>
         <section className="flex flex-col gap-4">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 w-4/5 mx-auto">
-            {currentPlants.length > 0 ? (
+            {isLoading ? (
+              <p className="col-span-full p-5 uppercase rounded-xl text-2xl text-center font-bold bg-white border-4">
+                Fetching your plants!
+              </p>
+            ) : currentPlants.length > 0 ? (
               currentPlants.map((plant) => {
                 const wateredToday = isToday(plant.last_watered);
 
@@ -56,7 +60,7 @@ const PlantList = () => {
                   >
                     <button
                       onClick={() => toggleEditForm(plant)}
-                      className="absolute top-0 right-0 text-white bg-black h-7 w-7 rounded-bl-lg rounded-tr-md hover:scale-105 translate-x-1 -translate-y-1 transition-all"
+                      className="absolute top-0 right-0 text-white bg-black h-7 w-7 rounded-bl-lg rounded-tr-md hover:scale-105 translate-x-1 -translate-y-1 transition-all origin-top-right"
                     >
                       ✎
                     </button>
@@ -134,7 +138,6 @@ const PlantList = () => {
           )}
         </div>
       </section>
-
       {plantToEdit && (
         <EditForm
           plantToEdit={plantToEdit}

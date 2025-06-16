@@ -150,89 +150,95 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   if (!plantToEdit) return null;
 
   return (
-    <motion.form
-      ref={formRef}
-      id="plant-form"
-      onSubmit={handleSubmit}
-      initial={{ y: 10, scale: 0.9 }}
-      animate={{ y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10 }}
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.2, ease: easeInOut }}
-      className="fixed flex-col z-10 flex gap-3 items-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-10 p-10 bg-[#c0564a] w-[500px] h-fit"
+      className="fixed w-screen h-screen bg-white/20 z-50 backdrop-blur-sm grid place-content-center inset-0"
     >
-      <button
-        type="button"
-        className="absolute flex justify-center items-center w-10 h-10 bg-black rounded-bl-md top-0 right-0 translate-x-1 -translate-y-1 text-white font-bold select-none text-4xl"
-        onClick={onClose}
+      <motion.form
+        ref={formRef}
+        id="plant-form"
+        onSubmit={handleSubmit}
+        initial={{ y: 10, scale: 0.9 }}
+        animate={{ y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2, ease: easeInOut }}
+        className="flex-col relative flex gap-3 items-center rounded-2xl border-10 p-10 bg-[#c0564a] w-[500px] h-fit"
       >
-        <span className="-translate-y-1 w-full h-full hover:rotate-10 transition-all origin-center">
-          ×
-        </span>
-      </button>
-      {/* Plant Name Input Section */}
-      <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
-
-      {/* Frequency Section */}
-      <PlantFrequencySelector
-        type={type}
-        setType={setType}
-        interval={interval}
-        setInterval={setInterval}
-        selectedDays={selectedDays}
-        setSelectedDays={setSelectedDays}
-      />
-      <PlantWateredSelector
-        lastWatered={lastWatered}
-        setLastWatered={setLastWatered}
-      />
-      <div className="w-full flex gap-3">
         <button
           type="button"
-          onClick={handleMoveUp}
-          disabled={index <= 0}
-          className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
-            index <= 0
-              ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
-              : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
-          }`}
+          className="absolute flex justify-center items-center w-10 h-10 bg-black rounded-bl-md top-0 right-0 translate-x-1 -translate-y-1 text-white font-bold select-none text-4xl"
+          onClick={onClose}
         >
-          Move Up
+          <span className="-translate-y-1 w-full h-full hover:rotate-10 transition-all origin-center">
+            ×
+          </span>
         </button>
-
-        <button
-          type="button"
-          onClick={handleMoveDown}
-          disabled={index === -1 || index >= plants.length - 1}
-          className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
-            index === -1 || index >= plants.length - 1
-              ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
-              : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
-          }`}
-        >
-          Move Down
-        </button>
-      </div>
-      <div className="w-full flex gap-3">
-        <button
-          type="submit"
-          className="uppercase w-1/2 font-bold text-2xl bg-red-400 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
-          disabled={isSubmitting || isDeleting}
-        >
-          {isSubmitting ? "Saving..." : "Save"}
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="uppercase w-1/2 font-bold text-2xl bg-red-600 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
-          disabled={isDeleting || isSubmitting}
-        >
-          {isDeleting ? "Deleting..." : "Delete"}
-        </button>
-      </div>
-      {error && (
-        <p className="mt-4 text-red-700 font-bold text-center">{error}</p>
-      )}
-    </motion.form>
+        {/* Plant Name Input Section */}
+        <PlantNameInput plantName={plantName} setPlantName={setPlantName} />
+        {/* Frequency Section */}
+        <PlantFrequencySelector
+          type={type}
+          setType={setType}
+          interval={interval}
+          setInterval={setInterval}
+          selectedDays={selectedDays}
+          setSelectedDays={setSelectedDays}
+        />
+        <PlantWateredSelector
+          lastWatered={lastWatered}
+          setLastWatered={setLastWatered}
+        />
+        <div className="w-full flex gap-3">
+          <button
+            type="button"
+            onClick={handleMoveUp}
+            disabled={index <= 0}
+            className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
+              index <= 0
+                ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
+                : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
+            }`}
+          >
+            Move Up
+          </button>
+          <button
+            type="button"
+            onClick={handleMoveDown}
+            disabled={index === -1 || index >= plants.length - 1}
+            className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
+              index === -1 || index >= plants.length - 1
+                ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
+                : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
+            }`}
+          >
+            Move Down
+          </button>
+        </div>
+        <div className="w-full flex gap-3">
+          <button
+            type="submit"
+            className="uppercase w-1/2 font-bold text-2xl bg-red-400 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
+            disabled={isSubmitting || isDeleting}
+          >
+            {isSubmitting ? "Saving..." : "Save"}
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="uppercase w-1/2 font-bold text-2xl bg-red-600 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
+            disabled={isDeleting || isSubmitting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+        {error && (
+          <p className="mt-4 text-red-700 font-bold text-center">{error}</p>
+        )}
+      </motion.form>
+    </motion.section>
   );
 };
 
