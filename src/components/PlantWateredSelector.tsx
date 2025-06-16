@@ -13,20 +13,21 @@ const PlantWateredSelector: React.FC<Props> = ({
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="grid grid-cols-2 items-center bg-[#e0998e] px-3 py-5 rounded-2xl">
-      <label htmlFor="last-watered" className="uppercase font-bold underline">
-        Last Watered
-      </label>
+    <label
+      htmlFor="last-watered"
+      className="uppercase w-full font-bold underline sgap-4 flex flex-col sm:flex-row items-center justify-center bg-[#e0998e] px-3 py-5 rounded-2xl"
+    >
+      Last Watered
       <input
         id="last-watered"
         type="date"
-        className="bg-white w-full border-4 rounded-xl px-3 py-1 outline-none"
+        className="bg-white w-[clamp(180px,50%,300px)] border-4 rounded-xl px-3 py-1 outline-none"
         required
         max={today}
         value={formatLastWatered}
         onChange={(e) => setLastWatered(e.target.value)}
       />
-    </div>
+    </label>
   );
 };
 

@@ -155,7 +155,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2, ease: easeInOut }}
-      className="fixed w-screen h-screen bg-white/20 z-50 backdrop-blur-sm grid place-content-center inset-0"
+      className="fixed w-screen h-screen bg-white/20 z-50 backdrop-blur-sm flex justify-center items-center inset-0"
     >
       <motion.form
         ref={formRef}
@@ -165,7 +165,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
         animate={{ y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.2, ease: easeInOut }}
-        className="flex-col relative flex gap-3 items-center rounded-2xl border-10 p-10 bg-[#c0564a] w-[500px] h-fit"
+        className="flex-col relative flex gap-3 items-center rounded-2xl border-10 p-10 bg-[#c0564a] w-[clamp(300px,90%,700px)]"
       >
         <button
           type="button"
