@@ -116,7 +116,7 @@ const PlantForm: React.FC = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2, ease: easeInOut }}
-      className="fixed w-full h-screen bg-white/20 z-50 backdrop-blur-sm flex justify-center items-center inset-0"
+      className="fixed w-full h-[100dvh] bg-white/20 z-50 backdrop-blur-sm flex justify-center items-center inset-0"
     >
       <motion.form
         ref={formRef}
