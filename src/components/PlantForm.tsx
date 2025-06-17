@@ -12,7 +12,7 @@ const PlantForm: React.FC = () => {
   const [plantName, setPlantName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [type, setType] = useState("daily");
+  const [type, setType] = useState("every-day");
   const [interval, setInterval] = useState(1);
   const [selectedDays, setSelectedDays] = useState<Day[]>([]);
 
