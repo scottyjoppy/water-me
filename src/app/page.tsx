@@ -8,7 +8,7 @@ const Home = () => {
 
   return (
     <>
-      <section className="flex flex-col gap-10 justify-center items-center h-screen border-10 bg-amber-300">
+      <section className="flex flex-col gap-10 justify-center items-center h-[100dvh] border-10 bg-amber-300">
         <h1 className="text-7xl text-max font-bold text-center whitespace-nowrap underline">
           Water Me!
         </h1>
