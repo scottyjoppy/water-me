@@ -4,6 +4,6 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full h-screen border-10 bg-amber-300">{children}</div>
+    <div className="w-full h-[100dvh] border-10 bg-amber-300">{children}</div>
   );
 }
