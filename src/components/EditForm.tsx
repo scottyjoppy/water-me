@@ -26,7 +26,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { plants } = useUserPlants();
+  const { plants, refresh } = useUserPlants();
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -109,6 +109,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
       })
       .eq("id", plantToEdit.id);
 
+    refresh();
     setIsSubmitting(false);
 
     if (error) {
