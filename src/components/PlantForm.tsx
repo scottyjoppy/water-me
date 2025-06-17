@@ -6,9 +6,11 @@ import { easeInOut, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { usePlantContext } from "./PlantContext";
+import { useUserPlants } from "@/hooks/useUserPlants"
 
 const PlantForm: React.FC = () => {
   const { formVisible, setFormVisible } = usePlantContext();
+  const { refresh } = useUserPlants();
   const [plantName, setPlantName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +101,7 @@ const PlantForm: React.FC = () => {
       return;
     }
 
+    refresh();
     setPlantName("");
     setFormVisible(false);
 
