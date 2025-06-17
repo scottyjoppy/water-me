@@ -28,11 +28,11 @@ const PlantFrequencySelector: React.FC<FrequencySelectorProps> = ({
     <div className="w-full gap-4 flex flex-col sm:flex-row items-center justify-between bg-[#e0998e] px-3 py-5 rounded-2xl">
       <label className="font-bold uppercase underline">Frequency</label>
 
-      <div className="flex w-full flex-col gap-2 items-center">
+      <div className="flex w-[clamp(180px,50%,300px)] flex-col gap-2 items-center">
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="px-3 py-1 rounded-xl h-10 border-4 w-[clamp(180px,50%,300px)] bg-white font-bold uppercase outline-none"
+          className="px-3 py-1 rounded-xl h-10 border-4 w-full bg-white font-bold uppercase outline-none"
         >
           <option value="every-month">Every # months</option>
           <option value="multiple-weekly">Multiple days per week</option>

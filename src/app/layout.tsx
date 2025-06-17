@@ -13,7 +13,13 @@ export default function RootLayout({
       <body className="antialiased font-sans">
         <PlantProvider>
           <Navbar />
-          <ClientCheck>{children}</ClientCheck>
+          <ClientCheck>
+            <div className="pt-10">
+              <div className="border-10 border-t-0 h-[calc(100dvh-40px)]">
+                {children}
+              </div>
+            </div>
+          </ClientCheck>
         </PlantProvider>
       </body>
     </html>

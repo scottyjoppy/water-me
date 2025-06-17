@@ -1,12 +1,12 @@
 "use client";
 
+import { useUserPlants } from "@/hooks/useUserPlants";
 import { Day, days } from "@/types/databaseValues";
 import { supabase } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { usePlantContext } from "./PlantContext";
-import { useUserPlants } from "@/hooks/useUserPlants"
 
 const PlantForm: React.FC = () => {
   const { formVisible, setFormVisible } = usePlantContext();
@@ -156,22 +156,19 @@ const PlantForm: React.FC = () => {
           />
         </label>
         <div className="w-full gap-4 flex flex-col sm:flex-row items-center justify-between bg-[#e0998e] px-3 py-5 rounded-2xl">
-          <label htmlFor="frequency" className="font-bold uppercase underline">
-            Frequency
-          </label>
-          <div className="flex flex-col items-center gap-4 sm:items-end">
+          <label className="font-bold uppercase underline">Frequency</label>
+          <div className="flex w-[clamp(180px,50%,300px)] flex-col gap-2 items-center">
             <select
               id="frequency"
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="px-3 py-1 rounded-xl h-10 border-4 w-[clamp(180px,50%,300px)] bg-white font-bold uppercase outline-none "
+              className="px-3 py-1 rounded-xl h-10 border-4 w-full bg-white font-bold uppercase outline-none "
             >
               <option value="every-day">Every # days</option>
               <option value="every-week">Every # weeks</option>
               <option value="every-month">Every # months</option>
               <option value="multiple-weekly">Multiple days per week</option>
             </select>
-            {/* Conditional Inputs */}
             {type === "multiple-weekly" && (
               <div className="flex flex-col items-center">
                 {/* Top row: days 0–3 */}
@@ -258,21 +255,21 @@ const PlantForm: React.FC = () => {
                 </div>
               </div>
             )}
+            {(type === "every-day" ||
+              type === "every-week" ||
+              type === "every-month") && (
+              <div className="flex gap-2 items-center">
+                <input
+                  type="number"
+                  min={1}
+                  max={50}
+                  value={interval}
+                  onChange={(e) => setInterval(Number(e.target.value))}
+                  className="h-10 w-16 px-3 py-1 rounded-xl border-4 bg-white"
+                />
+              </div>
+            )}
           </div>
-          {(type === "every-day" ||
-            type === "every-week" ||
-            type === "every-month") && (
-            <div className="flex gap-2 items-center">
-              <input
-                type="number"
-                min={1}
-                max={50}
-                value={interval}
-                onChange={(e) => setInterval(Number(e.target.value))}
-                className="h-10 w-16 px-3 py-1 rounded-xl border-4 bg-white"
-              />
-            </div>
-          )}
         </div>
         <button
           type="submit"

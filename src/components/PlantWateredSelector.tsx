@@ -15,9 +15,9 @@ const PlantWateredSelector: React.FC<Props> = ({
   return (
     <label
       htmlFor="last-watered"
-      className="uppercase w-full font-bold underline sgap-4 flex flex-col sm:flex-row items-center justify-center bg-[#e0998e] px-3 py-5 rounded-2xl"
+      className="uppercase w-full font-bold underline sgap-4 flex flex-col sm:flex-row items-center justify-between bg-[#e0998e] px-3 py-5 rounded-2xl"
     >
-      Last Watered
+      <p>Last Watered</p>
       <input
         id="last-watered"
         type="date"

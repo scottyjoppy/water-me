@@ -1,6 +1,14 @@
 import CustomAuthForm from "@/components/CustomAuthForm";
 
-export default async function AuthPage({ params }: { params: Promise<{ auth: string }> }) {
+export default async function AuthPage({
+  params,
+}: {
+  params: Promise<{ auth: string }>;
+}) {
   const resolvedParams = await params;
-  return <CustomAuthForm viewParam={resolvedParams.auth} />;
+  return (
+    <div className="amber-bg">
+      <CustomAuthForm viewParam={resolvedParams.auth} />
+    </div>
+  );
 }

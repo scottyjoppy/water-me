@@ -55,7 +55,7 @@ const PlantList = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between gap-3 h-full">
+    <div className="flex flex-col justify-between gap-3 h-full w-[clamp(300px,100%,1200px)]">
       <h2 className="mt-10 text-[clamp(2rem,5vw,3.5rem)] font-bold text-center underline">
         Plant List
       </h2>

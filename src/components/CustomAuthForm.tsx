@@ -92,7 +92,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
 
   return (
     <>
-      <section className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 rounded-xl p-5 bg-red-400">
+      <section className="w-[clamp(300px,90%,500px)] border-10 rounded-xl p-5 bg-red-400 flex flex-col items-center">
         <Head>
           <title>
             {view === "sign_in"
@@ -100,7 +100,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
               : "Register | Water Me Now"}
           </title>
         </Head>
-        <h1 className="uppercase font-bold text-center text-7xl m-4">
+        <h1 className="uppercase font-bold text-center text-[clamp(2rem,5vw,5.5rem)] m-4">
           {view === "sign_in" ? "Log In" : "Register"}
         </h1>
         {error && (
@@ -108,11 +108,14 @@ const CustomAuthForm = ({ viewParam }: Props) => {
             {error}
           </p>
         )}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 flex flex-col w-full items-center"
+        >
           <input
             type="email"
             placeholder="Email address"
-            className="w-full px-3 py-1 border-4 rounded-xl outline-none bg-white"
+            className="w-[clamp(200px,100%,400px)] px-3 py-1 border-4 rounded-xl outline-none bg-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -121,7 +124,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-3 py-1 border-4 rounded-xl outline-none bg-white"
+            className="w-[clamp(200px,100%,400px)] px-3 py-1 border-4 rounded-xl outline-none bg-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -132,7 +135,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
           <button
             type="submit"
             disabled={loading}
-            className="hover-up border-4 transition-all w-full bg-amber-500 uppercase font-bold py-1 px-3 rounded-xl hover:cursor-pointer disabled:opacity-50"
+            className="hover-up border-4 transition-all bg-amber-500 uppercase font-bold py-1 px-3 rounded-xl hover:cursor-pointer disabled:opacity-50 w-[clamp(100px,100%,200px)]"
           >
             {loading
               ? view === "sign_in"
@@ -143,15 +146,15 @@ const CustomAuthForm = ({ viewParam }: Props) => {
               : "Register"}
           </button>
         </form>
-        <div className="my-6 flex items-center">
-          <hr className="flex-grow border-2" />
+        <div className="my-6 flex justify-center items-center w-full">
+          <hr className="border-2 w-full" />
           <span className="mx-4 uppercase font-bold">or</span>
-          <hr className="flex-grow border-2" />
+          <hr className="border-2 w-full" />
         </div>
         <button
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="flex justify-center gap-5 hover-up transition-all w-full px-3 py-1 border-4 rounded-xl outline-none bg-white hover:font-bold hover:cursor-pointer disabled:opacity-50"
+          className="flex justify-center gap-5 hover-up transition-all w-[clamp(100px,100%,300px)] whitespace-nowrap px-3 py-1 border-4 rounded-xl outline-none bg-white hover:font-bold hover:cursor-pointer disabled:opacity-50"
         >
           {/* Google SVG Icon */}
           <svg
@@ -179,12 +182,12 @@ const CustomAuthForm = ({ viewParam }: Props) => {
           </svg>
           Continue with Google
         </button>
-        <p className="mt-6 flex justify-center items-center gap-2 text-sm">
+        <p className="mt-6 flex justify-center items-center gap-2 text-sm whitespace-nowrap">
           {view === "sign_in" ? (
             <>
               Don’t have an account?{" "}
               <Link href="/register">
-                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all">
+                <div className="hover-up px-3 py-1 bg-white border-4 rounded-xl hover:font-bold transition-all whitespace-nowrap">
                   Register Here
                 </div>
               </Link>
