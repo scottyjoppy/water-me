@@ -100,6 +100,7 @@ const MobileNavbar = ({
           <div className="col-span-3 justify-self-end flex justify-center">
             <Link
               href="/login"
+onClick={() => setMenuVisibility(false)}
               className="hover:underline hover:text-black/70 hover:scale-105 transition-all"
             >
               Login
