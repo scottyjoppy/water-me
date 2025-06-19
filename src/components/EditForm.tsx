@@ -1,7 +1,6 @@
 "use client";
 
 import { useUserPlants } from "@/hooks/useUserPlants";
-import { movePlant } from "@/utils/movePlants";
 import { normalizePositions } from "@/utils/normalizeOrder";
 import { supabase } from "@/utils/supabase/client";
 import { easeInOut, motion } from "framer-motion";
@@ -29,20 +28,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
   const { plants, refresh } = useUserPlants();
 
   const formRef = useRef<HTMLFormElement>(null);
-
-  const index = plants.findIndex((p) => p.id === plantToEdit?.id);
-
-  const handleMoveUp = async () => {
-    if (index > 0) {
-      await movePlant(plants, index, "up");
-    }
-  };
-
-  const handleMoveDown = async () => {
-    if (index >= 0 && index < plants.length - 1) {
-      await movePlant(plants, index, "down");
-    }
-  };
 
   useEffect(() => {
     if (plantToEdit) {
@@ -145,6 +130,7 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
     }
 
     await normalizePositions();
+    refresh();
     onClose();
   };
 
@@ -192,32 +178,6 @@ const EditForm: React.FC<EditFormProps> = ({ plantToEdit, onClose }) => {
           lastWatered={lastWatered}
           setLastWatered={setLastWatered}
         />
-        <div className="w-full flex gap-3">
-          <button
-            type="button"
-            onClick={handleMoveUp}
-            disabled={index <= 0}
-            className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
-              index <= 0
-                ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
-                : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
-            }`}
-          >
-            Move Up
-          </button>
-          <button
-            type="button"
-            onClick={handleMoveDown}
-            disabled={index === -1 || index >= plants.length - 1}
-            className={`uppercase w-1/2 font-bold text-2xl rounded-2xl border-4 transition-all ${
-              index === -1 || index >= plants.length - 1
-                ? "bg-gray-400 cursor-not-allowed" // Gray background and not-allowed cursor when disabled
-                : "bg-yellow-400 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer" // Original styles when enabled
-            }`}
-          >
-            Move Down
-          </button>
-        </div>
         <div className="w-full flex gap-3">
           <button
             type="submit"

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Plant } from "../types/databaseValues";
 import EditForm from "./EditForm";
 import LastWatered from "./LastWatered";
+import MoveButton from "./MoveButton";
 import NextWatered from "./NextWatered";
 
 const PlantList = () => {
@@ -74,6 +75,7 @@ const PlantList = () => {
                   key={plant.id}
                   className="relative border-4 p-2 rounded-xl bg-green-300 flex flex-col justify-between h-auto w-full sm:w-auto"
                 >
+                  <div>{plant.sort_order}</div>
                   <button
                     onClick={() => toggleEditForm(plant)}
                     className="absolute top-0 right-0 text-white bg-black h-7 w-7 rounded-bl-lg rounded-tr-md hover:scale-105 translate-x-1 -translate-y-1 transition-all origin-top-right"
@@ -88,7 +90,7 @@ const PlantList = () => {
                   <LastWatered
                     lastWatered={plant.last_watered}
                     className="font-semibold text-center uppercase text-sm"
-                    className2="border-4 rounded-md bg-white text-center px-1"
+                    className2="border-4 rounded-md text-center px-1"
                   />
 
                   <NextWatered
@@ -98,7 +100,8 @@ const PlantList = () => {
                     className2="border-4 rounded-md bg-white text-center px-1"
                   />
 
-                  <div className="flex justify-center pt-1">
+                  <div className="flex justify-center pt-1 relative h-11">
+                    <MoveButton plantToEdit={plant} />
                     <button
                       onClick={() => handleWater(plant.id)}
                       disabled={loadingId === plant.id || wateredToday}
