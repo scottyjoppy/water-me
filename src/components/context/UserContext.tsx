@@ -41,7 +41,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => {
       listener?.subscription.unsubscribe();
     };
-  }, [supabase]);
+  });
 
   // Sign out function
   const signOut = async () => {
