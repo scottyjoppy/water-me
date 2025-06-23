@@ -75,7 +75,6 @@ const PlantList = () => {
                   key={plant.id}
                   className="relative border-4 p-2 rounded-xl bg-green-300 flex flex-col justify-between h-auto w-full sm:w-auto"
                 >
-                  <div>{plant.sort_order}</div>
                   <button
                     onClick={() => toggleEditForm(plant)}
                     className="absolute top-0 right-0 text-white bg-black h-7 w-7 rounded-bl-lg rounded-tr-md hover:scale-105 translate-x-1 -translate-y-1 transition-all origin-top-right"
