@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "submit": "npm run lint && npm run build && git add . && git commit -m \"$@\" && git push"
+    "prep": "npm run lint && npm run build && git add . && git commit -m"
   },
   "dependencies": {
     "@supabase/auth-ui-react": "^0.4.7",
