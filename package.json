@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "submit": "npm run lint && npm run build && git add . && git commit -m \"$npm_config_msg\" && git push"
   },
   "dependencies": {
     "@supabase/auth-ui-react": "^0.4.7",

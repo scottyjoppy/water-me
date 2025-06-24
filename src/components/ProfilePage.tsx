@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 const ProfilePage = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
-  const [username, setUsername] = useState<any>(null);
-  const [notifications, setNotifications] = useState<Object | null>([null]);
+  const [username, setUsername] = useState<string | null>(null);
+  // const [notifications, setNotifications] = useState<Object | null>([null]);
 
   useEffect(() => {
     getUser().then((user) => {
