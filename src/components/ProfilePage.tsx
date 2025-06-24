@@ -24,7 +24,7 @@ const ProfilePage = () => {
 
         // Initialize form fields for editing
         setFormEmail(data.email);
-        setFormPhone(data.phone || "");
+        setFormPhone(data.phone || "")
         setFormUsername(data.username);
       } else {
         // handle error or unauthenticated
