@@ -20,3 +20,7 @@ button {
 .green-bg {
   @apply bg-green-600 w-full h-full grid place-items-center overflow-y-auto;
 }
+
+.my-button {
+  @apply border-4 transition-all uppercase font-bold py-1 px-3 rounded-xl hover:cursor-pointer;
+}

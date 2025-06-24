@@ -135,7 +135,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
           <button
             type="submit"
             disabled={loading}
-            className="hover-up border-4 transition-all bg-amber-500 uppercase font-bold py-1 px-3 rounded-xl hover:cursor-pointer disabled:opacity-50 w-[clamp(100px,100%,200px)]"
+            className="hover-up  bg-amber-500 border-4 transition-all uppercase font-bold py-1 px-3 rounded-xl hover:cursor-pointer disabled:opacity-50 w-[clamp(100px,100%,200px)]"
           >
             {loading
               ? view === "sign_in"
