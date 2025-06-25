@@ -1,3 +1,3 @@
 export default function PrivatePage() {
-  return <p>Hello </p>;
+  return <p>Private Page</p>;
 }

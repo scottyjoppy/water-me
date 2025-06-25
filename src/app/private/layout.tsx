@@ -1,13 +1,16 @@
-import { createClient } from "@/utils/supabase/server";
+import { getUser } from "@/utils/getUser";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
-export default async function DashboardLayout({ children }: { children: ReactNode}) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
+export default async function DashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const user = await getUser();
 
-  if (!data.user) {
-    console.log("User fetch error:", error)
+  if (!user) {
+    console.log("User fetch error");
     redirect("/login");
   }
 

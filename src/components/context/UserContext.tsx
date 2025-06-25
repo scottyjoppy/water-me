@@ -1,49 +1,49 @@
 "use client";
 
+import { getUser } from "@/utils/getUser";
 import { supabase } from "@/utils/supabase/client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-// Define the user type (adjust according to your DB schema or Supabase types)
-type User = {
-  id: string;
-  email?: string | null;
-  // add other user properties you want here
-} | null;
-
-type UserContextType = {
-  user: User;
+// Define the shape of the context
+interface UserContextType {
+  user: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
-};
+}
 
+// Provide a default value for TypeScript (never used directly)
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>(null);
+export function UserProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch initial user and listen to auth state changes
   useEffect(() => {
-    // Get current user on mount
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    const fetchUser = async () => {
+      const user = await getUser();
       setUser(user);
       setLoading(false);
-    });
+    };
 
-    // Listen for auth changes (login, logout, token refresh)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    fetchUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      // When auth changes, fetch fresh user info instead of trusting event data
+      fetchUser();
+    });
 
     return () => {
       listener?.subscription.unsubscribe();
     };
-  });
+  }, []);
 
-  // Sign out function
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -56,7 +56,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Custom hook to access user context easily
+// Custom hook to use the context
 export function useUser() {
   const context = useContext(UserContext);
   if (context === undefined) {
