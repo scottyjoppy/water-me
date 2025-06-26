@@ -10,6 +10,7 @@
     "prep": "npm run lint && npm run build && git add ."
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.6.1",

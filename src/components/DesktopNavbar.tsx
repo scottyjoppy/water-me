@@ -2,6 +2,8 @@
 
 import { Session } from "@supabase/supabase-js";
 import Link from "next/link";
+import { useState } from "react";
+import ProfileNav from "./ProfileNav";
 
 const DesktopNavbar = ({
   session,
@@ -12,6 +14,8 @@ const DesktopNavbar = ({
   handleLogout: () => void;
   setFormVisible: (val: boolean) => void;
 }) => {
+  const [visibility, setVisibility] = useState(false);
+
   return (
     <nav className="hidden md:grid items-center z-40 fixed w-full bg-white border-10 p-3 grid-cols-4 uppercase font-bold text-[clamp(1rem,3vw,1.5rem)] whitespace-nowrap">
       <div className="col-span-1 flex transition-none">
@@ -40,8 +44,9 @@ const DesktopNavbar = ({
               Add Plant
             </button>
           </div>
-          <div className="col-span-1 flex justify-end">
+          <div className="col-span-1 flex justify-end relative">
             <svg
+              onClick={() => setVisibility(() => !visibility)}
               height="36"
               viewBox="0 0 36 40"
               fill="none"
@@ -67,6 +72,7 @@ const DesktopNavbar = ({
                 strokeWidth="4"
               />
             </svg>
+            <ProfileNav visibility={visibility} handleLogout={handleLogout} />
           </div>
           {/* <div className="col-span-1 flex justify-end">
             <button
