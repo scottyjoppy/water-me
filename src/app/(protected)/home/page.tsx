@@ -1,6 +1,7 @@
 "use client";
 
 import { usePlantContext } from "@/components/PlantContext";
+import { checkAllUsersPlants } from "@/utils/checkAllUsersPlants";
 
 const Home = () => {
   const { setFormVisible } = usePlantContext();
@@ -15,6 +16,12 @@ const Home = () => {
         onClick={() => setFormVisible(true)}
       >
         Create plant
+      </button>
+      <button
+        className="uppercase w-[250px] font-bold text-2xl bg-red-400 rounded-2xl border-4 hover:brightness-150 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:cursor-pointer transition-all"
+        onClick={() => checkAllUsersPlants()}
+      >
+        NeedsWater?
       </button>
     </section>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { sendEmail } from "@/utils/sendEmail";
 import Link from "next/link";
 
 const Home = () => {
@@ -36,6 +37,14 @@ const Home = () => {
               Sign Up Now!
             </Link>
           )}
+          <form action={() => sendEmail()}>
+            <button
+              className="my-button h-10 flex bg-red-400 hover-up"
+              type="submit"
+            >
+              SUBMIT
+            </button>
+          </form>
         </section>
       </section>
     </>

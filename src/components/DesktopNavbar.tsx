@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 import { Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
@@ -74,14 +72,6 @@ const DesktopNavbar = ({
             </svg>
             <ProfileNav visibility={visibility} handleLogout={handleLogout} />
           </div>
-          {/* <div className="col-span-1 flex justify-end">
-            <button
-              onClick={handleLogout}
-              className="uppercase hover:underline hover:text-black/70 hover:scale-105 transition-all hover:cursor-pointer"
-            >
-              Logout
-            </button>
-          </div> */}
         </>
       ) : (
         <div className="col-span-3 justify-self-end flex justify-center">
