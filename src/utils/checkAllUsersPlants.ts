@@ -1,25 +1,22 @@
-import { supabaseAdmin } from "./supabase/service";
+import { Plant } from "@/types/databaseValues";
 
 export async function checkAllUsersPlants() {
-  const { data: plants, error } = await supabaseAdmin
-    .from("plants")
-    .select("*, user:users(id, email)");
+  const fetchPlants = async () => {
+    const res = await fetch("/api/check-all-user-plants");
 
-    if (error) throw new Error(error.message);
-  return console.log(plants)
+    if (!res.ok) {
+      throw new Error(`Failed to fetch plants: ${res.status}`);
+    }
 
-  // const today = new Date();
+    return await res.json();
+  };
 
-  // const needsWater = plants.filter((plant) => {
-  //   if (!plant.last_watered || !plant.frequency) return false;
-
-  //   const last = new Date(plant.last_watered);
-  //   const daysSince = Math.floor(
-  //     (today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24)
-  //   );
-
-    // return daysSince >= plant.frequency;
-  // });
-
-  // return needsWater;
+  try {
+    const data = await fetchPlants();
+    data.plants.forEach((el: Plant) => {
+      console.log(el.plant_name);
+    });
+  } catch (error) {
+    console.error("Error fetching plants:", error);
+  }
 }
