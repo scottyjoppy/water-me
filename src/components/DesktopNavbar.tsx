@@ -58,7 +58,7 @@ const DesktopNavbar = ({
                 strokeMiterlimit="3.99393"
                 strokeLinejoin="round"
               />
-              <path d="M19 19V26" stroke="black" stroke-width="4" />
+              <path d="M19 19V26" stroke="black" strokeWidth="4" />
               <path
                 d="M2 4V2H7C13.6274 2 19 7.37258 19 14V16H14C7.37259 16 2 10.6274 2 4Z"
                 stroke="black"

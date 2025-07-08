@@ -1,6 +1,7 @@
 "use client";
 
 import { usePlantContext } from "@/components/PlantContext";
+import checkAllUsersPlants from "@/utils/checkAllUsersPlants";
 
 const Home = () => {
   const { setFormVisible } = usePlantContext();
@@ -16,7 +17,7 @@ const Home = () => {
       >
         Create plant
       </button>
-      {/* <button onClick={checkAllUsersPlants}>Click</button> */}
+      <button onClick={checkAllUsersPlants}>Click</button>
     </section>
   );
 };

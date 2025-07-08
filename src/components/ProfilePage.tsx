@@ -4,61 +4,90 @@ import { useEffect, useState } from "react";
 
 const ProfilePage = () => {
   const [email, setEmail] = useState<string | null>(null);
-  const [phone, setPhone] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<boolean | null>(null);
 
   const [isEditing, setIsEditing] = useState(false);
 
   const [formEmail, setFormEmail] = useState("");
-  const [formPhone, setFormPhone] = useState("");
   const [formUsername, setFormUsername] = useState("");
 
   useEffect(() => {
-    async function fetchProfile() {
-      const res = await fetch("/api/profile", { method: "GET" });
+    async function fetchUser() {
+      const res = await fetch("/api/user", { method: "GET" });
       if (res.ok) {
         const data = await res.json();
         setEmail(data.email);
-        setPhone(data.phone || null);
         setUsername(data.username);
 
         // Initialize form fields for editing
         setFormEmail(data.email);
-        setFormPhone(data.phone || "");
         setFormUsername(data.username);
       } else {
         // handle error or unauthenticated
         setEmail(null);
-        setPhone(null);
         setUsername(null);
       }
     }
+    async function fetchProfile() {
+      try {
+        const res = await fetch("/api/profile", { method: "GET" });
+        if (!res.ok) {
+          setNotifications(null);
+          return;
+        }
+        const data = await res.json();
+        const notifications = data?.settings?.notifications ?? false;
+        setNotifications(notifications);
+      } catch (error) {
+        console.error("Failed to fetch profile: ", error);
+        setNotifications(false);
+      }
+    }
 
+    fetchUser();
     fetchProfile();
   }, []);
+  // useEffect(() => {
+  //   notifications ? console.log("worked", notifications) : null;
+  // }, [notifications]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/api/profile", {
+    // Update email + username
+    const userRes = await fetch("/api/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: formEmail,
-        phone: formPhone,
         username: formUsername,
       }),
     });
 
-    if (res.ok) {
-      setEmail(formEmail);
-      setPhone(formPhone);
-      setUsername(formUsername);
-      setIsEditing(false);
-    } else {
-      const errorData = await res.json();
+    if (!userRes.ok) {
+      const errorData = await userRes.json();
       alert(errorData.error);
+      return;
     }
+
+    // Update notifications separately
+    const profileRes = await fetch("/api/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ notifications }),
+    });
+
+    if (!profileRes.ok) {
+      const errorData = await profileRes.json();
+      alert(errorData.error);
+      return;
+    }
+
+    // On success, update local state and exit editing mode
+    setEmail(formEmail);
+    setUsername(formUsername);
+    setIsEditing(false);
   };
 
   return (
@@ -108,23 +137,16 @@ const ProfilePage = () => {
             </div>
 
             <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              <label
-                className="font-bold uppercase flex gap-4 items-center"
-                htmlFor="phone"
+              Notifications:{" "}
+              <button
+                type="button"
+                onClick={() => setNotifications((prev) => !prev)}
+                className={`uppercase font-bold border-4 px-2 bg-white rounded-xl transition-all ${
+                  notifications ? "hover:bg-green-400" : "hover:bg-red-400"
+                }`}
               >
-                Phone:
-                <input
-                  id="phone"
-                  type="tel"
-                  className="bg-white border-4 font-normal rounded-xl px-2"
-                  value={formPhone}
-                  onChange={(e) => setFormPhone(e.target.value)}
-                />
-              </label>
-            </div>
-
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              Notifications: (placeholder)
+                {String(notifications)}
+              </button>
             </div>
 
             <div className="flex gap-4 mt-4">
@@ -154,11 +176,10 @@ const ProfilePage = () => {
               {email ?? "Loading..."}
             </div>
             <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              <span className="font-bold uppercase">Phone #:</span>{" "}
-              {phone ?? "Loading..."}
-            </div>
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              Notifications: (placeholder)
+              Notifications:{" "}
+              <span className="uppercase font-bold">
+                {String(notifications)}
+              </span>
             </div>
 
             <button
