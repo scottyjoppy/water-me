@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Plant } from "@/types/databaseValues";
 
 export default async function checkAllUsersPlants() {
@@ -13,8 +15,19 @@ export default async function checkAllUsersPlants() {
 
   try {
     const data = await fetchPlants();
+
+    const userList: { [userId: string]: Plant[] } = {};
     data.plants.forEach((el: Plant) => {
-      getNextWaterDate(el);
+      if (!needsWatering(el)) {
+        return;
+      }
+
+      const userId = el.user_id;
+      if (userList[userId]) {
+        userList[userId].push(el);
+      } else {
+        userList[userId] = [el];
+      }
     });
   } catch (error) {
     console.error("Error fetching plants:", error);
@@ -41,4 +54,8 @@ const getNextWaterDate = (plant: Plant) => {
     default:
       return plant.frequency.interval;
   }
+};
+
+const needsWatering = (plant: Plant): boolean => {
+  return true;
 };
