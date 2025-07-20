@@ -1,8 +1,14 @@
 import { supabaseAdmin } from "@/utils/supabase/admin";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, context: { params: { id: string } }) {
-  const userId = context.params.id;
+interface RouteContext {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export async function GET(req: Request, context: RouteContext) {
+  const { id: userId } = await context.params;
 
   try {
     const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
