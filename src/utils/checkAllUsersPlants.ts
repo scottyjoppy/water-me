@@ -4,7 +4,7 @@ import { days, Plant } from "@/types/databaseValues";
 
 export default async function checkAllUsersPlants() {
   const fetchPlants = async () => {
-    const res = await fetch("/api/check-all-user-plants");
+    const res = await fetch("/api/admin/check-all-user-plants");
 
     if (!res.ok) {
       throw new Error(`Failed to fetch plants: ${res.status}`);
@@ -99,4 +99,21 @@ const needsWatering = (plant: Plant): boolean => {
   nextWater.setHours(12, 0, 0, 0);
 
   return nextWater.getTime() <= today.getTime();
+};
+
+const getUserById = async (userId: string): Promise<object | null> => {
+  const res = await fetch(`/api/admin/user/${userId}`);
+  if (!res.ok) {
+    console.error(`Failed to fetch user ${userId}: ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  return json.user;
+};
+
+const createEmails = async (userList: { [userId: string]: Plant[] }) => {
+  for (const userId in userList) {
+    const plants = userList[userId];
+    const user = await getUserById(userId);
+  }
 };

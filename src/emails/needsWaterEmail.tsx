@@ -11,11 +11,10 @@ import {
 
 interface emailProps {
   name: string;
-  email: string;
   plants: Plant[];
 }
 
-export function Email({ name, email, plants }: emailProps) {
+export function NeedsWaterEmail({ name, plants }: emailProps) {
   // export function Email({
   //   name = "Alexander",
   //   email = "test@example.com",
@@ -64,7 +63,7 @@ export function Email({ name, email, plants }: emailProps) {
             </>
           ) : (
             <Section className="text-center my-10">
-              Just kidding no they don't, ignore this email.
+              Just kidding no they don&apos;t, ignore this email.
             </Section>
           )}
         </Section>
@@ -73,4 +72,4 @@ export function Email({ name, email, plants }: emailProps) {
   );
 }
 
-export default Email;
+export default NeedsWaterEmail;
