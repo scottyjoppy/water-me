@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     });
 
     const data = await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "plant@water-me-now.eu",
       to: email,
       subject: "Your Plants need watering!",
       react: emailComponent,

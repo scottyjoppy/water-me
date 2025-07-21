@@ -54,7 +54,7 @@ export function NeedsWaterEmail({ name, plants }: emailProps) {
               ))}
               <Section className="flex justify-center">
                 <Button
-                  href="https://water-me-now.vercel.app/myplants"
+                  href="https://water-me-now.eu/myplants"
                   className="bg-blue-300 border-4 border-solid border-black px-3 py-1 uppercase font-bold rounded-xl text-black"
                 >
                   Water
