@@ -13,13 +13,13 @@ export async function GET(req: Request, context: RouteContext) {
   try {
     const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
 
-    if (error || !data) {
+    if (error || !data?.user) {
       return NextResponse.json(
         { error: error?.message || "User not found" },
         { status: 404 }
       );
     }
-    return NextResponse.json({ user: data }, { status: 200 });
+    return NextResponse.json({ user: data.user }, { status: 200 });
   } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },

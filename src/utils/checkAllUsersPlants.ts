@@ -29,7 +29,8 @@ export default async function checkAllUsersPlants() {
         userList[userId] = [el];
       }
     });
-    console.log("userList: ", userList);
+
+    await createEmails(userList);
   } catch (error) {
     console.error("Error fetching plants:", error);
   }
@@ -101,19 +102,65 @@ const needsWatering = (plant: Plant): boolean => {
   return nextWater.getTime() <= today.getTime();
 };
 
-const getUserById = async (userId: string): Promise<object | null> => {
-  const res = await fetch(`/api/admin/user/${userId}`);
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+const getUserById = async (userId: string): Promise<User | null> => {
+  const res = await fetch(`/api/admin/users/${userId}`);
   if (!res.ok) {
     console.error(`Failed to fetch user ${userId}: ${res.statusText}`);
+    return null;
   }
 
   const json = await res.json();
-  return json.user;
+  console.log("API Response:", json);
+  return json.user as User;
 };
 
 const createEmails = async (userList: { [userId: string]: Plant[] }) => {
+  const emailPromises: Promise<void>[] = [];
+
   for (const userId in userList) {
     const plants = userList[userId];
-    const user = await getUserById(userId);
+
+    const emailPromise = (async () => {
+      try {
+        const user = await getUserById(userId);
+
+        if (!user || !user.email) {
+          console.error(`No user or email found for userId: ${userId}`);
+          return;
+        }
+
+        const emailResponse = await fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            name: user.name || "Plant Parent",
+            plants: plants,
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          const errorData = await emailResponse.json();
+          console.error(`Failed to send email to ${user.email}:`, errorData);
+          return;
+        }
+
+        const result = await emailResponse.json();
+        console.log(`Email sent successfully to ${user.email}:`, result);
+      } catch (error) {
+        console.error(`Error sending email for user ${userId}:`, error);
+      }
+    })();
+
+    emailPromises.push(emailPromise);
   }
+  await Promise.allSettled(emailPromises);
 };

@@ -1,4 +1,4 @@
-import { NeedsWaterEmail } from "@/emails/needsWaterEmail"; // Adjust the import path as needed
+import { NeedsWaterEmail } from "@/emails/needsWaterEmail";
 import { Plant } from "@/types/databaseValues";
 import { NextResponse } from "next/server";
 import React from "react";
