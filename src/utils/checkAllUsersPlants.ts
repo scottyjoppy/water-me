@@ -1,22 +1,26 @@
+import NeedsWaterEmail from "@/emails/needsWaterEmail";
 import { days, Plant } from "@/types/databaseValues";
+import React from "react";
+import { Resend } from "resend";
+import { supabaseAdmin } from "./supabase/admin";
 
 export default async function checkAllUsersPlants() {
   const fetchPlants = async () => {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-    const res = await fetch(`${baseUrl}/api/admin/check-all-user-plants`);
+    const { data, error } = await supabaseAdmin.from("plants").select("*");
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch plants: ${res.status}`);
+    if (error) {
+      throw new Error(`Failed to fetch plants: ${error.message}`);
     }
 
-    return await res.json();
+    return { plants: data };
   };
 
   try {
     const data = await fetchPlants();
 
+    const plants = data.plants as Plant[];
     const userList: { [userId: string]: Plant[] } = {};
-    data.plants.forEach((el: Plant) => {
+    plants.forEach((el: Plant) => {
       if (!needsWatering(el)) {
         return;
       }
@@ -83,6 +87,9 @@ const getNextWaterDate = (plant: Plant) => {
           return candidate;
         }
       }
+
+      nextWater = new Date(today.getTime() + dayMs);
+      break;
     default:
       nextWater = lastWatered;
   }
@@ -108,17 +115,22 @@ interface User {
 }
 
 const getUserById = async (userId: string): Promise<User | null> => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-  const res = await fetch(`${baseUrl}/api/admin/users/${userId}`);
-  if (!res.ok) {
-    console.error(`Failed to fetch user ${userId}: ${res.statusText}`);
+  try {
+    const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+    if (error) {
+      console.error(`Failed to fetch user ${userId}: ${error.message}`);
+      return null;
+    }
+
+    return data.user as User;
+  } catch (error) {
+    console.error(`Error fetching user ${userId}:`, error);
     return null;
   }
-
-  const json = await res.json();
-  console.log("API Response:", json);
-  return json.user as User;
 };
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const createEmails = async (userList: { [userId: string]: Plant[] }) => {
   const emailPromises: Promise<void>[] = [];
@@ -135,27 +147,19 @@ const createEmails = async (userList: { [userId: string]: Plant[] }) => {
           return;
         }
 
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-        const emailResponse = await fetch(`${baseUrl}/api/send-email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: user.email,
-            name: user.name || "Plant Parent",
-            plants: plants,
-          }),
+        const emailComponent = React.createElement(NeedsWaterEmail, {
+          name: user.name || "Plant Parent",
+          plants,
         });
 
-        if (!emailResponse.ok) {
-          const errorData = await emailResponse.json();
-          console.error(`Failed to send email to ${user.email}:`, errorData);
-          return;
-        }
+        const data = await resend.emails.send({
+          from: "plant@water-me-now.eu",
+          to: user.email,
+          subject: "Your Plants need watering!",
+          react: emailComponent,
+        });
 
-        const result = await emailResponse.json();
-        console.log(`Email sent successfully to ${user.email}:`, result);
+        console.log(`Email sent successfully to ${user.email}:`, data);
       } catch (error) {
         console.error(`Error sending email for user ${userId}:`, error);
       }
