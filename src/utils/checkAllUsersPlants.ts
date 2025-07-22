@@ -3,7 +3,7 @@ import { days, Plant } from "@/types/databaseValues";
 export default async function checkAllUsersPlants() {
   const fetchPlants = async () => {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-    const res = await fetch(`/${baseUrl}/api/admin/check-all-user-plants`);
+    const res = await fetch(`${baseUrl}/api/admin/check-all-user-plants`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch plants: ${res.status}`);
@@ -109,7 +109,7 @@ interface User {
 
 const getUserById = async (userId: string): Promise<User | null> => {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-  const res = await fetch(`/${baseUrl}/api/admin/users/${userId}`);
+  const res = await fetch(`${baseUrl}/api/admin/users/${userId}`);
   if (!res.ok) {
     console.error(`Failed to fetch user ${userId}: ${res.statusText}`);
     return null;
@@ -136,7 +136,7 @@ const createEmails = async (userList: { [userId: string]: Plant[] }) => {
         }
 
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-        const emailResponse = await fetch(`/${baseUrl}/api/send-email`, {
+        const emailResponse = await fetch(`${baseUrl}/api/send-email`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
