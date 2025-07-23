@@ -1,7 +1,8 @@
 import NeedsWaterEmail from "@/emails/needsWaterEmail";
-import { days, Plant } from "@/types/databaseValues";
+import { Plant } from "@/types/databaseValues";
 import React from "react";
 import { Resend } from "resend";
+import getNextWaterDate from "./getNextWaterDate";
 import { supabaseAdmin } from "./supabase/admin";
 
 export default async function checkAllUsersPlants() {
@@ -39,63 +40,6 @@ export default async function checkAllUsersPlants() {
   }
 }
 
-const getNextWaterDate = (plant: Plant) => {
-  const lastWatered = new Date(plant.last_watered);
-  const today = new Date();
-
-  const dayMs = 1000 * 60 * 60 * 24;
-
-  let nextWater: Date;
-
-  switch (plant.frequency.type) {
-    case "every-day":
-      nextWater = new Date(
-        lastWatered.getTime() + dayMs * plant.frequency.interval
-      );
-      break;
-    case "every-week":
-      nextWater = new Date(
-        lastWatered.getTime() + dayMs * 7 * plant.frequency.interval
-      );
-      break;
-    case "every-month":
-      nextWater = new Date(lastWatered);
-      nextWater.setMonth(lastWatered.getMonth() + plant.frequency.interval);
-      break;
-    case "multiple-weekly":
-      today.setHours(12, 0, 0, 0);
-      lastWatered.setHours(12, 0, 0, 0);
-
-      const selectedIndexes = plant.frequency.days
-        .map((day) => days.indexOf(day))
-        .sort((a, b) => a - b);
-
-      for (
-        let d = new Date(lastWatered.getTime() + dayMs);
-        d <= today;
-        d.setDate(d.getDate() + 1)
-      ) {
-        if (selectedIndexes.includes(d.getDay())) {
-          return d;
-        }
-      }
-
-      for (let i = 1; i <= 7; i++) {
-        const candidate = new Date(today);
-        candidate.setDate(today.getDate() + i);
-        if (selectedIndexes.includes(candidate.getDay())) {
-          return candidate;
-        }
-      }
-
-      nextWater = new Date(today.getTime() + dayMs);
-      break;
-    default:
-      nextWater = lastWatered;
-  }
-  return nextWater;
-};
-
 const needsWatering = (plant: Plant): boolean => {
   const next = getNextWaterDate(plant);
 
@@ -118,12 +62,16 @@ const getUserById = async (userId: string): Promise<User | null> => {
   try {
     const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
 
-    if (error) {
-      console.error(`Failed to fetch user ${userId}: ${error.message}`);
+    if (error || !data) {
+      console.error(`Failed to fetch user ${userId}: ${error?.message}`);
       return null;
     }
 
-    return data.user as User;
+    return {
+      id: data.user.id,
+      email: data.user.email!,
+      name: data.user.user_metadata?.full_name || null,
+    };
   } catch (error) {
     console.error(`Error fetching user ${userId}:`, error);
     return null;
@@ -142,7 +90,7 @@ const createEmails = async (userList: { [userId: string]: Plant[] }) => {
       try {
         const user = await getUserById(userId);
 
-        if (!user || !user.email) {
+        if (!user) {
           console.error(`No user or email found for userId: ${userId}`);
           return;
         }

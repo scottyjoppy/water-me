@@ -1,4 +1,5 @@
 import { Plant } from "@/types/databaseValues";
+import getNextWaterDate from "@/utils/getNextWaterDate";
 import {
   Button,
   Heading,
@@ -15,17 +16,16 @@ interface emailProps {
 }
 
 export function NeedsWaterEmail({ name, plants }: emailProps) {
-  // export function Email({
+  // export function NeedsWaterEmail({
   //   name = "Alexander",
-  //   email = "test@example.com",
   //   plants = [],
   // }: emailProps) {
   //   plants = [
   //     {
   //       id: "123",
   //       plant_name: "Tim",
-  //       frequency: { type: "every-day", interval: 1 },
-  //       last_watered: "2025-07-10",
+  //       frequency: { type: "every-day", interval: 2 },
+  //       last_watered: "2025-07-22 00:00:00+00",
   //       sort_order: 10,
   //       user_id: "123",
   //     },
@@ -47,11 +47,36 @@ export function NeedsWaterEmail({ name, plants }: emailProps) {
           </Heading>
           {Array.isArray(plants) && plants.length > 0 ? (
             <>
-              {plants.map((plant) => (
-                <Text key={plant.id}>
-                  {plant.plant_name} - Last watered {plant.last_watered}
-                </Text>
-              ))}
+              {plants.map((plant) => {
+                const nextWater = getNextWaterDate(plant);
+
+                return (
+                  <Text key={plant.id}>
+                    <span className="uppercase font-bold">
+                      <u>{plant.plant_name}</u> -{" "}
+                    </span>
+                    Last Watering{" "}
+                    <span className="bg-white px-3 rounded-md">
+                      {new Intl.DateTimeFormat("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }).format(new Date(plant.last_watered))}
+                    </span>{" "}
+                    || Next Watering{" "}
+                    <span className="bg-white px-3 rounded-md">
+                      {typeof nextWater === "string"
+                        ? nextWater.toString()
+                        : new Intl.DateTimeFormat("en-GB", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(nextWater))}
+                    </span>
+                  </Text>
+                );
+              })}
+
               <Section className="flex justify-center">
                 <Button
                   href="https://water-me-now.eu/myplants"
