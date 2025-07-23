@@ -1,7 +1,7 @@
 import checkAllUsersPlants from "@/utils/checkAllUsersPlants";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(_request: NextRequest) {
   try {
     await checkAllUsersPlants();
     return NextResponse.json({ message: "Plant check complete" });
