@@ -52,27 +52,38 @@ export function NeedsWaterEmail({ name, plants }: emailProps) {
 
                 return (
                   <Text key={plant.id}>
-                    <span className="uppercase font-bold">
-                      <u>{plant.plant_name}</u> -{" "}
-                    </span>
-                    Last Watering{" "}
-                    <span className="bg-white px-3 rounded-md">
-                      {new Intl.DateTimeFormat("en-GB", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }).format(new Date(plant.last_watered))}
-                    </span>{" "}
-                    || Next Watering{" "}
-                    <span className="bg-white px-3 rounded-md">
-                      {typeof nextWater === "string"
-                        ? nextWater.toString()
-                        : new Intl.DateTimeFormat("en-GB", {
+                    {plant.last_watered ? (
+                      <>
+                        <span className="uppercase font-bold">
+                          <u>{plant.plant_name}</u> -{" "}
+                        </span>
+                        Last Watering{" "}
+                        <span className="bg-white px-3 rounded-md">
+                          {new Intl.DateTimeFormat("en-GB", {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }).format(new Date(nextWater))}
-                    </span>
+                          }).format(new Date(plant.last_watered))}
+                        </span>{" "}
+                        || Next Watering{" "}
+                        <span className="bg-white px-3 rounded-md">
+                          {typeof nextWater === "string"
+                            ? nextWater.toString()
+                            : new Intl.DateTimeFormat("en-GB", {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }).format(new Date(nextWater))}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="uppercase font-bold">
+                          <u>{plant.plant_name}</u> -{" "}
+                        </span>
+                        Last Watering: Never
+                      </>
+                    )}
                   </Text>
                 );
               })}
