@@ -10,7 +10,7 @@ import MoveButton from "./MoveButton";
 import NextWatered from "./NextWatered";
 
 const PlantList = () => {
-  const { plants, isLoading } = useUserPlants();
+  const { plants, isLoading, refresh } = useUserPlants();
   const [page, setPage] = useState(0);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [plantToEdit, setPlantToEdit] = useState<Plant | null>(null);
@@ -47,7 +47,13 @@ const PlantList = () => {
 
   const handleWater = async (id: string) => {
     setLoadingId(id);
-    await markAsWatered(id);
+    try {
+      await markAsWatered(id);
+    } catch (error) {
+      console.error("Error in markAsWatered:", error);
+    }
+
+    refresh();
     setLoadingId(null);
   };
 
