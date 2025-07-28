@@ -56,21 +56,38 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  settings: {
+    notifications: boolean;
+  } | null;
 }
 
 const getUserById = async (userId: string): Promise<User | null> => {
   try {
-    const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const { data: authData, error: authError } =
+      await supabaseAdmin.auth.admin.getUserById(userId);
 
-    if (error || !data) {
-      console.error(`Failed to fetch user ${userId}: ${error?.message}`);
+    if (authError || !authData) {
+      console.error(`Failed to fetch user ${userId}: ${authError?.message}`);
       return null;
     }
 
+    const { data: profileData, error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .select("settings")
+      .eq("id", userId)
+      .single();
+
+    if (profileError) {
+      console.error(
+        `Failed to fetch profile for user ${userId}: ${profileError.message}`
+      );
+    }
+
     return {
-      id: data.user.id,
-      email: data.user.email!,
-      name: data.user.user_metadata?.full_name || null,
+      id: authData.user.id,
+      email: authData.user.email!,
+      name: authData.user.user_metadata?.full_name || null,
+      settings: (profileData?.settings as { notifications: boolean }) || null,
     };
   } catch (error) {
     console.error(`Error fetching user ${userId}:`, error);
@@ -92,6 +109,11 @@ const createEmails = async (userList: { [userId: string]: Plant[] }) => {
 
         if (!user) {
           console.error(`No user or email found for userId: ${userId}`);
+          return;
+        }
+
+        if (user.settings?.notifications === false) {
+          console.log(`Email notifications disabled for user ${user.email}`);
           return;
         }
 

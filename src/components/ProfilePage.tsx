@@ -48,9 +48,6 @@ const ProfilePage = () => {
     fetchUser();
     fetchProfile();
   }, []);
-  // useEffect(() => {
-  //   notifications ? console.log("worked", notifications) : null;
-  // }, [notifications]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,7 +117,7 @@ const ProfilePage = () => {
               </label>
             </div>
 
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
+            {/* <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
               <label
                 className="font-bold uppercase flex gap-4 items-center"
                 htmlFor="email"
@@ -134,7 +131,7 @@ const ProfilePage = () => {
                   onChange={(e) => setFormEmail(e.target.value)}
                 />
               </label>
-            </div>
+            </div> */}
 
             <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
               Notifications:{" "}
