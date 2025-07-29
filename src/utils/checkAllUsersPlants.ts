@@ -57,8 +57,8 @@ interface User {
   email: string;
   name?: string;
   settings: {
-    notifications: boolean;
-  } | null;
+    notifications: boolean | null;
+  };
 }
 
 const getUserById = async (userId: string): Promise<User | null> => {
@@ -74,7 +74,7 @@ const getUserById = async (userId: string): Promise<User | null> => {
     const { data: profileData, error: profileError } = await supabaseAdmin
       .from("profiles")
       .select("settings")
-      .eq("id", userId)
+      .eq("user_id", userId)
       .single();
 
     if (profileError) {

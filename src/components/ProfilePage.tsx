@@ -89,7 +89,7 @@ const ProfilePage = () => {
 
   return (
     <section className="text-2xl grid w-full h-full place-items-center">
-      <div className="w-[clamp(300px,90%,800px)] h-[clamp(300px,90%,1200px)] border-10 rounded-xl bg-cyan-400 flex flex-col items-center">
+      <div className="w-[clamp(300px,90%,800px)] h-[clamp(300px,90%,400px)] border-10 rounded-xl bg-cyan-400 flex flex-col items-center">
         <div className="w-full border-b-10 grid place-items-center p-5">
           <h2 className="font-bold text-[clamp(2rem,5vw,3.5rem)]">
             {username ? `${username}'s Profile` : "Profile Page"}
@@ -101,7 +101,7 @@ const ProfilePage = () => {
             onSubmit={handleSubmit}
             className="w-6/7 py-5 flex flex-col gap-4"
           >
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
+            <div className="bg-cyan-300 h-10 px-3 py-1 rounded-2xl w-full">
               <label
                 className="font-bold uppercase flex gap-4 items-center"
                 htmlFor="username"
@@ -134,7 +134,7 @@ const ProfilePage = () => {
             </div> */}
 
             <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              Notifications:{" "}
+              <span className="uppercase font-bold">Notifications: </span>
               <button
                 type="button"
                 onClick={() => setNotifications((prev) => !prev)}
@@ -142,11 +142,11 @@ const ProfilePage = () => {
                   notifications ? "hover:bg-green-400" : "hover:bg-red-400"
                 }`}
               >
-                {String(notifications)}
+                {String(notifications ? "ON" : "OFF")}
               </button>
             </div>
 
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-4 mt-4 justify-center">
               <button
                 type="submit"
                 className="my-button hover-up w-[clamp(100px,100%,200px)] bg-green-400"
@@ -163,20 +163,20 @@ const ProfilePage = () => {
             </div>
           </form>
         ) : (
-          <div className="w-6/7 py-5 flex flex-col gap-4">
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              <span className="font-bold uppercase">Username:</span>{" "}
-              {username ?? "Loading..."}
-            </div>
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              <span className="font-bold uppercase">Email:</span>{" "}
-              {email ?? "Loading..."}
-            </div>
-            <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
-              Notifications:{" "}
-              <span className="uppercase font-bold">
-                {String(notifications)}
-              </span>
+          <div className="w-6/7 py-5 flex flex-col gap-4 items-center justify-between">
+            <div className="gap-4 flex flex-col w-full">
+              <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
+                <span className="font-bold uppercase">Username:</span>{" "}
+                {username ?? "Loading..."}
+              </div>
+              <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
+                <span className="font-bold uppercase">Email:</span>{" "}
+                {email ?? "Loading..."}
+              </div>
+              <div className="bg-cyan-300 px-3 py-1 rounded-2xl w-full">
+                <span className="font-bold uppercase">Notifications: </span>
+                {String(notifications ? "ON" : "OFF")}
+              </div>
             </div>
 
             <button
