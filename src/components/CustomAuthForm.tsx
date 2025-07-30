@@ -18,7 +18,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
       ? window.location.origin
       : process.env.NEXT_PUBLIC_SITE_URL || "";
 
-  const redirectTo = `${origin}/home`;
+  const redirectTo = `${origin}/myplants`;
 
   // Form state
   const [email, setEmail] = useState("");
@@ -79,7 +79,7 @@ const CustomAuthForm = ({ viewParam }: Props) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${origin}/api/auth/callback?next=/home`,
+        redirectTo: `${origin}/api/auth/callback?next=/myplants`,
         queryParams: {
           access_type: "offline",
           prompt: "consent",
@@ -142,8 +142,8 @@ const CustomAuthForm = ({ viewParam }: Props) => {
                 ? "Logging in..."
                 : "Registering..."
               : view === "sign_in"
-              ? "Log In"
-              : "Register"}
+                ? "Log In"
+                : "Register"}
           </button>
         </form>
         <div className="my-6 flex justify-center items-center w-full">
