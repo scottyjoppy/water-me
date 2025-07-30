@@ -1,6 +1,7 @@
 import ClientCheck from "@/components/context/ClientCheck";
 import Navbar from "@/components/Navbar";
 import { PlantProvider } from "@/components/PlantContext";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export default function RootLayout({
@@ -11,6 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className="antialiased font-sans">
+        <Analytics />
         <PlantProvider>
           <Navbar />
           <ClientCheck>
